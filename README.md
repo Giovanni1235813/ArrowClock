@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" alt="ArrowClock Logo" width="160"/>
+<img src="docs/logo.png" alt="ArrowClock Logo" width="160"/>
 
 # ArrowClock
 
@@ -8,7 +8,6 @@
 
 [![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://adoptium.net/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
-[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red?style=flat-square)]()
 
 </div>
 
@@ -16,9 +15,10 @@
 
 ## ✏️ About this project
 
-> _Two or three sentences for your own presentation — write them here._
->
-> _Example: "ArrowClock was born out of a real need I experienced on the shooting line at Arcieri Aquila Bianca in Modena. After years of improvised timing solutions, I decided to build something that actually works the way a Shooting Director needs it to."_
+I designed this software with the intention of using it on the competition field as the Director of Shooting.
+It aims to be an efficient, precise, and intuitive solution that allows for a more modern and faster management of archery competitions.
+The design was conceived to make the screen as simple as possible for the archer to see, thus avoiding any type of distraction.
+The DOS's Controller follows the same philosophy, presenting all the available controls on the screen and making competition management as intuitive as possible.
 
 ---
 
@@ -39,12 +39,10 @@ It supports:
 
 ## 🖥️ Screenshots
 
-> _Add your own screenshots here._
->
-> ```
-> ![Operator Panel](docs/screenshot_operator.png)
-> ![Archer Display](docs/screenshot_display.png)
-> ```
+Operator View
+ ![Operator Window](docs/screenshot_operator.png)
+Archer View
+ ![Archer Display](docs/screenshot_display.png)
 
 ---
 
@@ -60,28 +58,6 @@ It supports:
 
 > **Don't have Java?**
 > Download it for free from [https://adoptium.net/](https://adoptium.net/) (Eclipse Temurin — recommended) or from [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/).
-
----
-
-## 🚀 Getting Started
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/ArrowClock.git
-cd ArrowClock
-
-# 2. Compile (requires JDK 17+)
-javac -d out src/*.java
-
-# 3. Run
-java -cp out ArcherySoftwareMain
-```
-
-Or, if a pre-built JAR is available:
-
-```bash
-java -jar ArrowClock.jar
-```
 
 ---
 
@@ -130,10 +106,10 @@ For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock
 
 ## 📄 Documentation
 
-| Document | Description |
-|---|---|
-| [`ArrowClock_UserManual.docx`](docs/ArrowClock_UserManual.docx) | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
-| [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md) | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
+| Document                                                       | Description |
+|----------------------------------------------------------------|---|
+| [`ArrowClock_UserManual.pdf`](docs/ArrowClock_UserManual.docx) | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
+| [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md)   | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
 
 ---
 
@@ -141,11 +117,3 @@ For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock
 
 **Giovanni Zucchi**
 Arcieri Aquila Bianca — Modena, Italy
-
----
-
-## 📜 License
-
-> _Add your preferred license here, or write:_
-
-All rights reserved. This software is provided as-is for use at archery competitions. Redistribution or commercial use without explicit written permission from the author is not permitted.
