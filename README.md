@@ -1,0 +1,151 @@
+<div align="center">
+
+<img src="logo.png" alt="ArrowClock Logo" width="160"/>
+
+# ArrowClock
+
+### Professional Timing & Signalling Software for Archery Competitions
+
+[![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://adoptium.net/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
+[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red?style=flat-square)]()
+
+</div>
+
+---
+
+## ✏️ About this project
+
+> _Two or three sentences for your own presentation — write them here._
+>
+> _Example: "ArrowClock was born out of a real need I experienced on the shooting line at Arcieri Aquila Bianca in Modena. After years of improvised timing solutions, I decided to build something that actually works the way a Shooting Director needs it to."_
+
+---
+
+## 🎯 What is ArrowClock?
+
+**ArrowClock** is a Java Swing application designed for the **Shooting Director** at archery competitions. It replaces traffic-light hardware with a software solution that can drive one or more external monitors simultaneously, managing the complete shooting cycle with audio whistles, automatic colour signalling, and a detailed match log.
+
+It supports:
+- **Linear shooting** (INDOOR / OUTDOOR / Manual) with turn rotation (AB–CD, A–B–C, etc.)
+- **Head-to-head match** mode (Individual / Teams / Mix-Team) with chess-clock timing
+- **Shoot-off** format
+- **Emergency freeze** with time adjustment dialog
+- **Equipment recovery** phase with booking and +40s increments
+- **Bilingual UI** (English / Italian, switchable at runtime)
+- **Automatic log file** recording every session event
+
+---
+
+## 🖥️ Screenshots
+
+> _Add your own screenshots here._
+>
+> ```
+> ![Operator Panel](docs/screenshot_operator.png)
+> ![Archer Display](docs/screenshot_display.png)
+> ```
+
+---
+
+## ⚙️ Requirements
+
+| Requirement | Minimum |
+|---|---|
+| Java | JRE / JDK 17 or later |
+| OS | Windows 10/11 · macOS 10.14+ · Linux (Ubuntu 20.04+) |
+| RAM | 2 GB |
+| Display | 1 primary monitor (1024×768 minimum) |
+| Audio | Any audio output for whistle sounds |
+
+> **Don't have Java?**
+> Download it for free from [https://adoptium.net/](https://adoptium.net/) (Eclipse Temurin — recommended) or from [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/).
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/YOUR_USERNAME/ArrowClock.git
+cd ArrowClock
+
+# 2. Compile (requires JDK 17+)
+javac -d out src/*.java
+
+# 3. Run
+java -cp out ArcherySoftwareMain
+```
+
+Or, if a pre-built JAR is available:
+
+```bash
+java -jar ArrowClock.jar
+```
+
+---
+
+## ⌨️ Key Shortcuts
+
+| Key | Action |
+|---|---|
+| `Space` | Start end / Skip phase |
+| `Enter` | Emergency / Resume |
+| `G` | Reset match |
+| `R` | Recovery / +40s / Book |
+| `F` | Manual whistle |
+| `T` | Rotate starting turn |
+| `M` | Cycle time format (sec / mm:ss / invisible) |
+| `S` | Toggle sound |
+| `C` | Toggle dark / light theme |
+| `L` | Switch language (EN ↔ IT) |
+| `Shift` | Adjust time (during emergency only) |
+
+---
+
+## 📁 Log Files
+
+When **Match in Progress** is active, ArrowClock automatically records every session event to:
+
+```
+~/ArrowClock_Logs/ArrowClock_Log.txt
+```
+
+The log is always **appended** — never overwritten — so historical sessions are preserved.
+
+---
+
+## 📐 Architecture
+
+ArrowClock uses the **Command Pattern** as its core design principle. Every user action and timer event is a self-contained `Comando` class. The main class (`ArcherySoftwareMain`) acts as a pure state container with no business logic. Key supporting engines:
+
+- `MotoreTimer` — High-precision 100ms tick with per-side fractional second accumulators
+- `MotoreAudio` — Square-wave whistle generator with immediate cancellation
+- `MotoreFontDinamico` — DPI-aware responsive font calculator
+- `GestoreLingua` — Static localisation registry (EN / IT)
+
+For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md).
+
+---
+
+## 📄 Documentation
+
+| Document | Description |
+|---|---|
+| [`ArrowClock_UserManual.docx`](docs/ArrowClock_UserManual.docx) | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
+| [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md) | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
+
+---
+
+## 👤 Author
+
+**Giovanni Zucchi**
+Arcieri Aquila Bianca — Modena, Italy
+
+---
+
+## 📜 License
+
+> _Add your preferred license here, or write:_
+
+All rights reserved. This software is provided as-is for use at archery competitions. Redistribution or commercial use without explicit written permission from the author is not permitted.
