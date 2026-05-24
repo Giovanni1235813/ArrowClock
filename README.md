@@ -106,10 +106,10 @@ For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock
 
 ## 📄 Documentation
 
-| Document                                                       | Description |
-|----------------------------------------------------------------|---|
-| [`ArrowClock_UserManual.pdf`](docs/ArrowClock_UserManual.docx) | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
-| [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md)   | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
+| Document                                                  | Description |
+|-----------------------------------------------------------|---|
+| [`ArrowClock_UserManual.pdf`](ArrowClock_UserManual.pdf)  | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
+| [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md) | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
 
 ---
 
