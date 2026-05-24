@@ -24,7 +24,7 @@ The DOS's Controller follows the same philosophy, presenting all the available c
 
 ## 🎯 What is ArrowClock?
 
-**ArrowClock** is a Java Swing application designed for the **Shooting Director** at archery competitions. It replaces traffic-light hardware with a software solution that can drive one or more external monitors simultaneously, managing the complete shooting cycle with audio whistles, automatic colour signalling, and a detailed match log.
+**ArrowClock** is a Java Swing application designed for the **Director of Shooting** at archery competitions. It replaces traffic-light hardware with a software solution that can drive one or more external monitors simultaneously, managing the complete shooting cycle with audio whistles, automatic colour signalling, and a detailed match log.
 
 It supports:
 - **Linear shooting** (INDOOR / OUTDOOR / Manual) with turn rotation (AB–CD, A–B–C, etc.)
@@ -40,7 +40,7 @@ It supports:
 ## 🖥️ Screenshots
 
 Operator View
- ![Operator Window](docs/screenshot_operator.png)
+ ![Operator View](docs/screenshot_operator.png)
 Archer View
  ![Archer Display](docs/screenshot_display.png)
 
@@ -57,7 +57,7 @@ Archer View
 | Audio | Any audio output for whistle sounds |
 
 > **Don't have Java?**
-> Download it for free from [https://adoptium.net/](https://adoptium.net/) (Eclipse Temurin — recommended) or from [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/).
+> Download it for free from [https://adoptium.net/](https://adoptium.net/) or from [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/).
 
 ---
 

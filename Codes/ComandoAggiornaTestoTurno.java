@@ -33,7 +33,9 @@ public class ComandoAggiornaTestoTurno implements Comando {
         for (DisplayArciere da : app.archerDisplays) {
             da.turniLabelSx.setText(app.nomeSx);
             da.turniLabelDx.setText(app.nomeDx);
-            da.turniSpecialLabel.setText(app.nomeSx + " - " + app.nomeDx);
+
+            // MODIFICATO: Calcolo dinamico sul nome dello scontro (es. "A - B")
+            da.aggiornaTestoEFontTurniSpecial(app.nomeSx + " - " + app.nomeDx);
         }
     }
 
@@ -42,10 +44,15 @@ public class ComandoAggiornaTestoTurno implements Comando {
         app.btnAlternaMetata.setText(new GeneratoreTestoBottone(mod, app.indicePartenza).genera());
         String testo = new GeneratoreTestoTurno(mod, app.indicePartenza, app.faseAttuale, app.turnoCorrente).genera();
 
-        app.minTurniSingolo.setText(testo);
+        if (app.minTurniSingolo != null) {
+            app.minTurniSingolo.setText(testo);
+        }
+
         for (DisplayArciere da : app.archerDisplays) {
             da.turniLabelSingolo.setText(testo);
-            da.turniSpecialLabel.setText(testo);
+
+            // MODIFICATO: Calcolo dinamico sulla stringa dei turni lineari (es. "AB - cd")
+            da.aggiornaTestoEFontTurniSpecial(testo);
         }
     }
 }

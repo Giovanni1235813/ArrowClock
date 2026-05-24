@@ -37,10 +37,9 @@ public class ComandoInnescaRecupero implements Comando {
         app.minTurniSingolo.setText(testoRecupero);
         for (DisplayArciere da : app.archerDisplays) {
             da.turniLabelSingolo.setText(testoRecupero);
-            da.turniSpecialLabel.setText(testoRecupero);
-        }
 
-        new ComandoBloccaInterfaccia(app, true).esegui();
-        new ComandoAggiornaDisplay(app).esegui();
+            // MODIFICATO: Il motore calcola lo spazio per "RECUPERO" nell'istante in cui la fase inizia
+            da.aggiornaTestoEFontTurniSpecial(testoRecupero);
+        }
     }
 }

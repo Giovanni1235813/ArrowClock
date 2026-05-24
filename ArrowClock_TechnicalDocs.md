@@ -5,25 +5,37 @@
 
 ---
 
-## Table of Contents / Indice
+## Table of Contents
 
-1. [Architecture Overview / Panoramica Architetturale](#1-architecture-overview--panoramica-architetturale)
-2. [Class Inventory / Inventario delle Classi](#2-class-inventory--inventario-delle-classi)
+1. [Architecture Overview](#1-architecture-overview)
+2. [Class Inventory](#2-class-inventory)
 3. [Design Patterns](#3-design-patterns)
-4. [State Machine / Macchina a Stati](#4-state-machine--macchina-a-stati)
-5. [Timer Engine / Motore Timer](#5-timer-engine--motore-timer)
-6. [Audio Engine / Motore Audio](#6-audio-engine--motore-audio)
-7. [Display System / Sistema Display](#7-display-system--sistema-display)
-8. [Localisation / Localizzazione](#8-localisation--localizzazione)
-9. [Logging / Sistema di Log](#9-logging--sistema-di-log)
-10. [Keyboard Shortcuts / Scorciatoie](#10-keyboard-shortcuts--scorciatoie)
-11. [Known Minor Issues / Anomalie Note](#11-known-minor-issues--anomalie-note)
+4. [State Machine](#4-state-machine)
+5. [Timer Engine](#5-timer-engine)
+6. [Audio Engine](#6-audio-engine)
+7. [Display System](#7-display-system)
+8. [Localisation](#8-localisation)
+9. [Logging](#9-logging)
+10. [Keyboard Shortcuts](#10-keyboard-shortcuts)
 
 ---
 
+## Indice
+
+1. [Panoramica Architetturale](#1-panoramica-architetturale)
+2. [Inventario delle Classi](#2-inventario-delle-classi)
+3. [Design Pattern](#3-design-pattern)
+4. [Macchina a Stati](#4-macchina-a-stati)
+5. [Motore Timer](#5-motore-timer)
+6. [Motore Audio](#6-motore-audio)
+7. [Sistema Display](#7-sistema-display)
+8. [Localizzazione](#8-localizzazione)
+9. [Sistema di Log](#9-sistema-di-log)
+10. [Scorciatoie](#10-scorciatoie-da-tastiera)
+
 ---
 
-# ENGLISH
+## ENGLISH
 
 ---
 
@@ -114,14 +126,14 @@ Each class implements `Comando` and encapsulates exactly one operation.
 
 ### 2.3 Engine / Service Classes
 
-| Class | Pattern | Role |
-|---|---|---|
-| `MotoreTimer` | — | Manages the Swing `Timer` at 100ms intervals. Accumulates fractional seconds with **separate accumulators** for left/right sides to prevent "bleeding" in match mode. |
-| `MotoreAudio` | Singleton | Whistle sound engine. Uses a `SourceDataLine` and a single-thread `ExecutorService` to generate square-wave tones. `azzeraCodaFischi()` immediately stops any in-progress sound by incrementing a generation counter. |
-| `MotoreFontDinamico` | Static utility | Computes three font sizes (numbers, STOP word, labels) based on the container's physical diagonal in inches, using the display's DPI. The STOP font has an independent horizontal cap to prevent truncation. |
-| `GestoreLingua` | Registry | Static map of all localised strings. Supports IT and EN. Keys are hierarchical (`btn.start`, `panel.tempi`, etc.). `t(key)` retrieves, `tf(key, args)` formats with `printf`-style arguments. |
-| `GestoreLog` | — | Writes timestamped events to `~/ArrowClock_Logs/ArrowClock_Log.txt`. Only writes when `isGaraInCorso == true`. Internally translates hardcoded Italian state strings via `traduciStatoRecupero()`. |
-| `GestoreScorciatoie` | — | Maps keyboard shortcuts to commands using Swing `InputMap`/`ActionMap` on the operator panel. |
+| Class | Pattern | Role                                                                                                                                                                                                                                                                                          |
+|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MotoreTimer` | — | Manages the Swing `Timer` at 100ms intervals. Accumulates fractional seconds with **separate accumulators** for left/right sides to prevent "bleeding" in match mode.                                                                                                                         |
+| `MotoreAudio` | Singleton | Whistle sound engine. Uses a `SourceDataLine` and a single-thread `ExecutorService` to generate square-wave tones. `azzeraCodaFischi()` immediately stops any in-progress sound by incrementing a generation counter.                                                                         |
+| `MotoreFontDinamico` | Static utility | Computes three base font sizes (numbers, STOP word, labels) using the display's DPI and physical diagonal. It also features a dynamic, character-by-character predictive algorithm to calculate the maximum safe font size for any custom text string, strictly preventing layout truncation. |
+| `GestoreLingua` | Registry | Static map of all localised strings. Supports IT and EN. Keys are hierarchical (`btn.start`, `panel.tempi`, etc.). `t(key)` retrieves, `tf(key, args)` formats with `printf`-style arguments.                                                                                                 |
+| `GestoreLog` | — | Writes timestamped events to `~/ArrowClock_Logs/ArrowClock_Log.txt`. Only writes when `isGaraInCorso == true`. Internally translates hardcoded Italian state strings via `traduciStatoRecupero()`.                                                                                            |
+| `GestoreScorciatoie` | — | Maps keyboard shortcuts to commands using Swing `InputMap`/`ActionMap` on the operator panel.                                                                                                                                                                                                 |
 
 ### 2.4 UI Builder / Dialog Classes
 
@@ -179,19 +191,19 @@ The application's behaviour is driven entirely by the `Fase` enum value stored i
                   │     │ PREPARAZIONE    │                   │
                   │     │    ROSSO (T1)   │                   │
                   │     └────────┬────────┘                   │
-                  │              │ T1 timeout / SPACE         │ ComandoFermaTutto
+                  │              │ T1 timeout                 │ ComandoFermaTutto
                   │              ▼                            │
-                  │  ┌──────────────────────┐                │
-                  │  │  TIRO_VERDE_GIALLO   │                │
-                  │  │  (T2, GREEN → YELLOW)│                │
-                  │  └──────────┬───────────┘                │
+                  │  ┌──────────────────────┐                 │
+                  │  │  TIRO_VERDE_GIALLO   │                 │
+                  │  │  (T2, GREEN → YELLOW)│                 │
+                  │  └──────────┬───────────┘                 │
                   │             │ T2 timeout / SPACE          │
                   │             ▼                             │
-                  │  ┌─────────────────────┐                 │
+                  │  ┌─────────────────────┐                  │
                   │  │  [all turns done?]  │ ──No──▶ back to PREPARAZIONE_ROSSO (next turn)
-                  │  └──────────┬──────────┘                 │
+                  │  └──────────┬──────────┘                  │
                   │             │ Yes                         │
-                  │      ┌──────┴──────┐                     │
+                  │      ┌──────┴──────┐                      │
                   │  Recovery?  Yes ──▶ RECUPERO_ATTESA ──▶ RECUPERO_TIRO ──┘
                   │      │ No                                 
                   └──────┘ (3 whistles → ATTESA)             
@@ -247,13 +259,15 @@ Each `DisplayArciere` and the operator miniature panel use `CardLayout` with fou
 
 `ComandoApplicaLayoutMonitor` selects the correct card on every state change.
 
-### 7.3 Responsive Fonts
-`MotoreFontDinamico.calcolaDimensioni()` computes three sizes (numbers, STOP word, labels) from the container's physical diagonal in inches:
-- **Numbers** target ~25cm equivalent at full diagonal, scaled down for smaller containers.
-- **STOP** has an additional width cap (`boundWidth / 5.2`) to prevent the word from being truncated horizontally.
-- **Labels** are always 1/5 of the number size.
+### 7.3 Responsive & Predictive Fonts
+`MotoreFontDinamico` acts as the centralized typography engine, employing two distinct strategies to strictly prevent layout truncation:
 
-Both `DisplayArciere` and the operator miniature have `ComponentListener` resize handlers that call this engine.
+* **Static/Geometric Calculation (`calcolaDimensioni()`):** Computes three base sizes (numbers, STOP word, labels) using the container's physical diagonal and DPI.
+    * **Numbers** target a strict ~25cm physical equivalent on full-size monitors to meet regulations, scaling down proportionally on smaller screens.
+    * **STOP** applies an independent horizontal cap (`boundWidth / 5.2`) to prevent the wide word from being truncated horizontally.
+    * **Labels** are structurally locked to 1/5 of the number size.
+* **Dynamic/Predictive Calculation (`calcolaFontAdattivoPerTesto()`):** Scans custom text strings (e.g., team names, "RECUPERO") character by character to calculate their exact pixel footprint based on Arial Bold proportions. It dynamically returns the maximum safe font size that perfectly fits the current container without horizontal or vertical clipping.
+* **Resize Handlers:** Both `DisplayArciere` and the operator miniature use `ComponentListener` events to instantly trigger this engine and recalculate metrics upon any layout or text change.
 
 ---
 
@@ -295,19 +309,6 @@ Shortcuts are registered on the operator panel's `ContentPane` `InputMap` with `
 | SHIFT | `DialogTempo` (emergency only) |
 | ↑ / ↓ | Increment / decrement `spinVolee` |
 
----
-
-## 11. Known Minor Issues
-
-| # | Issue | Location | Severity | Suggested Fix |
-|---|---|---|---|---|
-| 1 | `app.lastTickTime` is declared but never used | `ArcherySoftwareMain` | Low (dead code) | Remove field; `MotoreTimer` uses its own `lastTickTimeNano`. |
-| 2 | `app.accumulatoreSecondi` is owned by two classes | `ArcherySoftwareMain`, `MotoreTimer` | Low | Move the field into `MotoreTimer`; expose read access if needed. |
-| 3 | `fasePreRecupero`, `tempoSxPreRecupero`, `tempoDxPreRecupero`, `colorePreRecupero` are written but never read | `ArcherySoftwareMain`, `ComandoInnescaRecupero` | Low (dead code) | Remove all four fields and the write statements in `ComandoInnescaRecupero`. |
-| 4 | `ComandoAggiornaTema.applicaRicorsivo()` is `public` | `ComandoAggiornaTema` | Low (encapsulation leak) | Change to `package-private`; extract a dedicated `applicaTema(Container)` helper used by `DialogTempo`. |
-| 5 | `faseSalvata` is null until first emergency | `ArcherySoftwareMain` | Low (robustness) | Initialise to `Fase.ATTESA` in the constructor to prevent potential NPE if `risolviEmergenza` were ever reached via an unexpected code path. |
-
----
 ---
 
 # ITALIANO
@@ -405,7 +406,7 @@ Ogni classe implementa `Comando` e incapsula esattamente un'operazione.
 |---|---|---|
 | `MotoreTimer` | — | Gestisce il `Timer` Swing a intervalli da 100ms. Accumula secondi frazionari con **accumulatori separati** per i lati sinistro/destro per prevenire "bleeding" in modalità scontro. |
 | `MotoreAudio` | Singleton | Motore audio per fischi. Usa `SourceDataLine` e `ExecutorService` a thread singolo per generare toni a onda quadra. `azzeraCodaFischi()` ferma immediatamente qualsiasi suono in corso tramite un contatore di generazione volatile. |
-| `MotoreFontDinamico` | Utility statica | Calcola tre dimensioni di font (numeri, parola STOP, etichette) sulla diagonale fisica del contenitore in pollici, usando il DPI del display. Il font STOP ha un limite orizzontale indipendente per prevenire troncature. |
+| `MotoreFontDinamico` | Utility statica | Calcola tre dimensioni di base per i font (numeri, STOP, etichette) utilizzando i DPI e la diagonale fisica del monitor. Include inoltre un algoritmo predittivo dinamico che analizza carattere per carattere le stringhe di testo personalizzate, calcolandone la dimensione massima sicura per prevenirne il troncamento. |
 | `GestoreLingua` | Registro | Mappa statica di tutte le stringhe localizzate. Supporta IT e EN. `t(chiave)` recupera, `tf(chiave, args)` formatta in stile `printf`. |
 | `GestoreLog` | — | Scrive eventi con timestamp su `~/ArrowClock_Logs/ArrowClock_Log.txt`. Scrive solo quando `isGaraInCorso == true`. Traduce internamente le stringhe di stato tramite `traduciStatoRecupero()`. |
 | `GestoreScorciatoie` | — | Mappa le scorciatoie da tastiera ai comandi usando `InputMap`/`ActionMap` Swing sul pannello operatore. |
@@ -466,7 +467,7 @@ Il comportamento dell'applicazione è guidato interamente dal valore dell'enum `
                   │     │ PREPARAZIONE    │                   │
                   │     │    ROSSO (T1)   │                   │
                   │     └────────┬────────┘                   │
-                  │              │ Timeout T1 / SPAZIO        │ ComandoFermaTutto
+                  │              │ Timeout T1                 │ ComandoFermaTutto
                   │              ▼                            │
                   │  ┌──────────────────────┐                │
                   │  │  TIRO_VERDE_GIALLO   │                │
@@ -534,13 +535,15 @@ Ogni `DisplayArciere` e il pannello miniatura dell'operatore usano `CardLayout` 
 
 `ComandoApplicaLayoutMonitor` seleziona la card corretta ad ogni cambio di stato.
 
-### 7.3 Font Responsivi
-`MotoreFontDinamico.calcolaDimensioni()` calcola tre dimensioni dalla diagonale fisica del contenitore in pollici:
-- **Numeri** mirano a ~25cm equivalenti alla diagonale completa, scalati per contenitori più piccoli.
-- **STOP** ha un limite di larghezza aggiuntivo (`boundWidth / 5.2`) per evitare troncature orizzontali.
-- **Etichette** sono sempre 1/5 della dimensione dei numeri.
+### 7.3 Font Responsivi e Predittivi
+`MotoreFontDinamico` funge da motore tipografico centralizzato, utilizzando due strategie distinte per prevenire tassativamente il troncamento del layout:
 
-Sia `DisplayArciere` che la miniatura dell'operatore hanno listener `ComponentListener` di resize che chiamano questo motore.
+* **Calcolo Statico/Geometrico (`calcolaDimensioni()`):** Calcola tre dimensioni di base (numeri, parola STOP, etichette) utilizzando la diagonale fisica e i DPI del contenitore.
+    * I **Numeri** puntano a un equivalente fisico di ~25cm sui monitor da gara per soddisfare i regolamenti, scalandosi in modo proporzionale sugli schermi più piccoli.
+    * Lo **STOP** applica un limite orizzontale indipendente (`boundWidth / 5.2`) per impedire che la parola venga troncata lateralmente.
+    * Le **Etichette** sono bloccate strutturalmente a 1/5 della dimensione dei numeri.
+* **Calcolo Dinamico/Predittivo (`calcolaFontAdattivoPerTesto()`):** Analizza le stringhe di testo personalizzate (es. nomi delle squadre, "RECUPERO") carattere per carattere, calcolando il loro ingombro esatto in pixel basato sulle proporzioni del font Arial Bold. Restituisce dinamicamente la dimensione massima del font sicura per riempire perfettamente il contenitore senza sforare i margini.
+* **Gestione Eventi Resize:** Sia il `DisplayArciere` che la miniatura dell'operatore utilizzano eventi `ComponentListener` per invocare questo motore e ricalcolare istantaneamente le metriche ad ogni cambio di layout o di testo.
 
 ---
 
@@ -581,18 +584,6 @@ Le scorciatoie sono registrate sull'`InputMap` del `ContentPane` del pannello op
 | N | `DialogNomiScontro` (solo modalità scontro) |
 | SHIFT | `DialogTempo` (solo durante emergenza) |
 | ↑ / ↓ | Incrementa / decrementa `spinVolee` |
-
----
-
-## 11. Anomalie Note (Minor Issues)
-
-| # | Anomalia | Posizione | Gravità | Correzione Suggerita |
-|---|---|---|---|---|
-| 1 | `app.lastTickTime` dichiarato ma mai usato | `ArcherySoftwareMain` | Bassa (dead code) | Rimuovere il campo; `MotoreTimer` usa il proprio `lastTickTimeNano`. |
-| 2 | `app.accumulatoreSecondi` ha doppia proprietà | `ArcherySoftwareMain`, `MotoreTimer` | Bassa | Spostare il campo in `MotoreTimer`; esporre accesso in lettura se necessario. |
-| 3 | `fasePreRecupero`, `tempoSxPreRecupero`, `tempoDxPreRecupero`, `colorePreRecupero` scritti ma mai letti | `ArcherySoftwareMain`, `ComandoInnescaRecupero` | Bassa (dead code) | Rimuovere tutti e quattro i campi e le relative istruzioni di scrittura in `ComandoInnescaRecupero`. |
-| 4 | `ComandoAggiornaTema.applicaRicorsivo()` è `public` | `ComandoAggiornaTema` | Bassa (violazione incapsulamento) | Rendere `package-private`; estrarre un helper dedicato `applicaTema(Container)` usato da `DialogTempo`. |
-| 5 | `faseSalvata` può essere null al primo richiamo | `ArcherySoftwareMain` | Bassa (robustezza) | Inizializzare a `Fase.ATTESA` nel costruttore per prevenire potenziali NPE. |
 
 ---
 

@@ -116,6 +116,15 @@ public class DisplayArciere {
                 boundWidth, boundHeight, frame.getGraphicsConfiguration());
 
         impostaFontGrandi(dimensioni[0], dimensioni[1], dimensioni[2]);
+
+        // Rinfresca istantaneamente le label in base al testo che contengono in questo esatto momento
+        rinfrescaFontLabelAdattiva(turniSpecialLabel, turniSpecialLabel.getText());
+        rinfrescaFontLabelAdattiva(idLabel, idLabel.getText());
+    }
+
+    public void aggiornaTestoEFontTurniSpecial(String testo) {
+        turniSpecialLabel.setText(testo);
+        rinfrescaFontLabelAdattiva(turniSpecialLabel, testo);
     }
 
     public void impostaFontGrandi(int sizeNumeri, int sizeStop, int sizeTesti) {
@@ -149,8 +158,11 @@ public class DisplayArciere {
         turniLabelSx.setFont(fontTesti);
         timerLabelDx.setFont(new Font("Arial", Font.BOLD, (int)(fontNumeri.getSize() * 0.8)));
         turniLabelDx.setFont(fontTesti);
-        turniSpecialLabel.setFont(fontNumeri);
-        idLabel.setFont(fontNumeri);
+
+        // FIX DEFINITIVO: Elimina le assegnazioni rigide. Ogni volta che il timer ripristina
+        // lo stato normale, chiede un rinfresco adattivo in tempo reale basato sul testo attuale.
+        rinfrescaFontLabelAdattiva(turniSpecialLabel, turniSpecialLabel.getText());
+        rinfrescaFontLabelAdattiva(idLabel, idLabel.getText());
     }
 
     public void applicaFontStop() {
@@ -161,10 +173,30 @@ public class DisplayArciere {
         turniLabelSx.setFont(fontTesti);
         timerLabelDx.setFont(new Font("Arial", Font.BOLD, (int)(fontStop.getSize() * 0.8)));
         turniLabelDx.setFont(fontTesti);
-        turniSpecialLabel.setFont(fontStop);
+
+        // FIX DEFINITIVO: Anche in emergenza, lasciamo che sia il calcolo adattivo
+        // a gestire la scritta "STOP" in base allo spazio dello schermo corrente.
+        rinfrescaFontLabelAdattiva(turniSpecialLabel, turniSpecialLabel.getText());
     }
 
-    public void impostaTestoId(int numeroMonitor) {
-        idLabel.setText("MONITOR " + numeroMonitor);
+    public void impostaTestoId(int id) {
+        String testo = GestoreLingua.t("combo.Monitor " + id);
+        if (testo.startsWith("[?")) {
+            testo = "Monitor " + id;
+        }
+        idLabel.setText(testo);
+        rinfrescaFontLabelAdattiva(idLabel, testo);
+    }
+
+    public void rinfrescaFontLabelAdattiva(JLabel label, String testo) {
+        int boundWidth = frame.getWidth();
+        int boundHeight = frame.getHeight();
+        if (boundWidth <= 0 || boundHeight <= 0 || testo == null || testo.isEmpty()) return;
+
+        int[] dimensioni = MotoreFontDinamico.calcolaDimensioni(boundWidth, boundHeight, frame.getGraphicsConfiguration());
+        int maxFontSize = dimensioni[0]; // La dimensione dei numeri fa da soffitto massimo invalicabile
+
+        int adaptiveSize = MotoreFontDinamico.calcolaFontAdattivoPerTesto(testo, boundWidth, boundHeight, maxFontSize);
+        label.setFont(new Font("Arial", Font.BOLD, adaptiveSize));
     }
 }

@@ -88,8 +88,16 @@ public class CostruttoreOperatore {
             app.minEmergenzaTimeSx.setFont(fTurniSide);
             app.minEmergenzaTimeDx.setFont(fTurniSide);
         }
+
         if (app.minIdLabel != null) {
-            app.minIdLabel.setFont(app.fontMinNumeri);
+            // MODIFICATO: Anche la miniatura calcola al volo lo spazio per la sua stringa specifica di ID
+            int adaptiveSizeMin = MotoreFontDinamico.calcolaFontAdattivoPerTesto(
+                    app.minIdLabel.getText(),
+                    app.miniaturaContainer.getWidth(),
+                    app.miniaturaContainer.getHeight(),
+                    dim[0]
+            );
+            app.minIdLabel.setFont(new Font("Arial", Font.BOLD, adaptiveSizeMin));
         }
     }
 

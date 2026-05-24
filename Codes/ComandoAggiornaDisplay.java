@@ -116,7 +116,9 @@ public class ComandoAggiornaDisplay implements Comando {
                 da.timerLabelSingolo.setText(testoStop);
                 da.timerLabelSx.setText(testoStop);
                 da.timerLabelDx.setText(testoStop);
-                da.turniSpecialLabel.setText(testoStop);
+
+                // MODIFICATO: Diventa adattivo sul testo "STOP"
+                da.aggiornaTestoEFontTurniSpecial(testoStop);
             }
             return;
         }
@@ -132,7 +134,18 @@ public class ComandoAggiornaDisplay implements Comando {
             app.minTimerSingolo.setText(tempoFormat);
             for (DisplayArciere da : app.archerDisplays) {
                 da.timerLabelSingolo.setText(tempoFormat);
-                // REFIX DEFINITIVO: Rimossa la riga che sovrascreveva il display dei turni col tempo!
+            }
+
+            // FIX: Forza la persistenza della scritta RECUPERO usando il motore dinamico!
+            if (app.faseAttuale == Fase.RECUPERO_ATTESA || app.faseAttuale == Fase.RECUPERO_TIRO) {
+                String testoRecupero = GestoreLingua.t("display.recupero");
+                app.minTurniSingolo.setText(testoRecupero);
+                for (DisplayArciere da : app.archerDisplays) {
+                    da.turniLabelSingolo.setText(testoRecupero);
+
+                    // MODIFICATO: Sostituisce il vecchio .setText() con il nuovo metodo adattivo
+                    da.aggiornaTestoEFontTurniSpecial(testoRecupero);
+                }
             }
         }
 
