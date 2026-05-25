@@ -117,3 +117,6 @@ For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock
 
 **Giovanni Zucchi**
 Arcieri Aquila Bianca — Modena, Italy
+
+
+-Some components of this project were generated with the assistance of Google Gemini and Anthropic Claude-
