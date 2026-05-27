@@ -25,6 +25,9 @@ public class ComandoAggiornaDisplay implements Comando {
         // 2. Aggiorna colori e testi
         aggiornaColoriTimerVisibili();
         aggiornaTestiTimer();
+
+        // FIX LINUX: Forza lo svuotamento immediato del buffer grafico verso il monitor
+        java.awt.Toolkit.getDefaultToolkit().sync();
     }
 
     private void applicaFontInBaseAllaFase() {
@@ -109,16 +112,18 @@ public class ComandoAggiornaDisplay implements Comando {
     private void aggiornaTestiTimer() {
         if (app.faseAttuale == Fase.EMERGENZA) {
             String testoStop = GestoreLingua.t("display.stop");
-            app.minTimerSingolo.setText(testoStop);
-            app.minTimerSx.setText(testoStop);
-            app.minTimerDx.setText(testoStop);
+            aggiornaTestoSicuro(app.minTimerSingolo, testoStop);
+            aggiornaTestoSicuro(app.minTimerSx, testoStop);
+            aggiornaTestoSicuro(app.minTimerDx, testoStop);
             for (DisplayArciere da : app.archerDisplays) {
-                da.timerLabelSingolo.setText(testoStop);
-                da.timerLabelSx.setText(testoStop);
-                da.timerLabelDx.setText(testoStop);
+                aggiornaTestoSicuro(da.timerLabelSingolo, testoStop);
+                aggiornaTestoSicuro(da.timerLabelSx, testoStop);
+                aggiornaTestoSicuro(da.timerLabelDx, testoStop);
 
-                // MODIFICATO: Diventa adattivo sul testo "STOP"
-                da.aggiornaTestoEFontTurniSpecial(testoStop);
+                // Proteggiamo anche il ricalcolo del font adattivo
+                if (!testoStop.equals(da.turniSpecialLabel.getText())) {
+                    da.aggiornaTestoEFontTurniSpecial(testoStop);
+                }
             }
             return;
         }
@@ -131,20 +136,21 @@ public class ComandoAggiornaDisplay implements Comando {
                 tempoFormat = FormattatoreTempo.formatta(0, app.statoFormatoTempo);
             }
 
-            app.minTimerSingolo.setText(tempoFormat);
+            aggiornaTestoSicuro(app.minTimerSingolo, tempoFormat);
             for (DisplayArciere da : app.archerDisplays) {
-                da.timerLabelSingolo.setText(tempoFormat);
+                aggiornaTestoSicuro(da.timerLabelSingolo, tempoFormat);
             }
 
-            // FIX: Forza la persistenza della scritta RECUPERO usando il motore dinamico!
+            // GESTIONE RECUPERO
             if (app.faseAttuale == Fase.RECUPERO_ATTESA || app.faseAttuale == Fase.RECUPERO_TIRO) {
                 String testoRecupero = GestoreLingua.t("display.recupero");
-                app.minTurniSingolo.setText(testoRecupero);
+                aggiornaTestoSicuro(app.minTurniSingolo, testoRecupero);
                 for (DisplayArciere da : app.archerDisplays) {
-                    da.turniLabelSingolo.setText(testoRecupero);
+                    aggiornaTestoSicuro(da.turniLabelSingolo, testoRecupero);
 
-                    // MODIFICATO: Sostituisce il vecchio .setText() con il nuovo metodo adattivo
-                    da.aggiornaTestoEFontTurniSpecial(testoRecupero);
+                    if (!testoRecupero.equals(da.turniSpecialLabel.getText())) {
+                        da.aggiornaTestoEFontTurniSpecial(testoRecupero);
+                    }
                 }
             }
         }
@@ -169,12 +175,17 @@ public class ComandoAggiornaDisplay implements Comando {
                 sxFormat = isIndiv ? FormattatoreTempo.formatta(0, app.statoFormatoTempo) : FormattatoreTempo.formatta(app.tempoSalvatoSx, app.statoFormatoTempo);
             }
 
-            app.minTimerSx.setText(sxFormat);
-            app.minTimerDx.setText(dxFormat);
+            aggiornaTestoSicuro(app.minTimerSx, sxFormat);
+            aggiornaTestoSicuro(app.minTimerDx, dxFormat);
             for (DisplayArciere da : app.archerDisplays) {
-                da.timerLabelSx.setText(sxFormat);
-                da.timerLabelDx.setText(dxFormat);
+                aggiornaTestoSicuro(da.timerLabelSx, sxFormat);
+                aggiornaTestoSicuro(da.timerLabelDx, dxFormat);
             }
+        }
+    }
+    private void aggiornaTestoSicuro(javax.swing.JLabel label, String nuovoTesto) {
+        if (label != null && nuovoTesto != null && !nuovoTesto.equals(label.getText())) {
+            label.setText(nuovoTesto);
         }
     }
 }
