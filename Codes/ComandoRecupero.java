@@ -17,6 +17,10 @@ public class ComandoRecupero implements Comando {
 
     @Override
     public void esegui() {
+        // FIX: Blocco totale e immediato del recupero durante gli scontri (schermo diviso)
+        if (app.isScontroMode) {
+            return;
+        }
         if (app.faseAttuale == Fase.EMERGENZA
                 || app.faseAttuale == Fase.RECUPERO_TIRO
                 || app.faseAttuale == Fase.IDENTIFICAZIONE_MONITOR) return;

@@ -51,9 +51,12 @@ public class ComandoAggiornaBottoni implements Comando {
     }
 
     private void aggiornaBottoneRecupero(boolean isIdMode) {
+        // MODIFICA: Aggiunto "&& !app.isScontroMode" per disattivare il recupero a schermo diviso
         boolean enabled = (app.faseAttuale != Fase.EMERGENZA
                 && app.faseAttuale != Fase.RECUPERO_TIRO
-                && !isIdMode);
+                && !isIdMode
+                && !app.isScontroMode);
+
         app.btnRecupero.setEnabled(enabled);
         app.btnRecupero.setBackground(enabled ? Color.YELLOW : new Color(130, 130, 90));
         app.btnRecupero.setForeground(enabled ? Color.BLACK : new Color(70, 70, 50));
