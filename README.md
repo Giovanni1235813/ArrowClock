@@ -48,13 +48,13 @@ Archer View
 
 ## ⚙️ Requirements
 
-| Requirement | Minimum |
-|---|---|
-| Java | JRE / JDK 17 or later |
-| OS | Windows 10/11 · macOS 10.14+ · Linux (Ubuntu 20.04+) |
-| RAM | 2 GB |
-| Display | 1 primary monitor (1024×768 minimum) |
-| Audio | Any audio output for whistle sounds |
+| Requirement | Minimum                                                                                                              |
+|---|----------------------------------------------------------------------------------------------------------------------|
+| Java | JRE / JDK 17 or later                                                                                                |
+| OS | Windows 10/11 · macOS 10.14+ · Linux (Ubuntu 20.04+)                                                                 |
+| RAM | 2 GB                                                                                                                 |
+| Display | Primary monitor (1024×768 min) + Secondary display(s) 27" Full-HD (Recommended to have around 25cm of number height) |
+| Audio | Any audio output for whistle sounds                                                                                  |
 
 > **Don't have Java?**
 > Download it for free from [https://adoptium.net/](https://adoptium.net/) or from [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/).
@@ -110,6 +110,16 @@ For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock
 |-----------------------------------------------------------|---|
 | [`ArrowClock_UserManual.pdf`](ArrowClock_UserManual.pdf)  | Full bilingual user manual (EN + IT) — hardware requirements, Java installation, step-by-step usage guide, log file reference |
 | [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md) | Bilingual technical documentation — class inventory, design patterns, state machine, known issues |
+
+---
+
+## 📬 Get in Touch / Support
+
+If you successfully use ArrowClock in an official competition or training session, I would absolutely love to see it in action! Feel free to send photos of your control unit and the displays on the field to **gvnnsecondo@gmail.com**.
+
+You can also use this email address for any clarifications, questions, or support requests regarding the software.
+
+⭐ **Did ArrowClock work perfectly for you? Please consider giving this project a Star on GitHub!**
 
 ---
 

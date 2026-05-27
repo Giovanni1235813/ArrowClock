@@ -269,6 +269,10 @@ Each `DisplayArciere` and the operator miniature panel use `CardLayout` with fou
 * **Dynamic/Predictive Calculation (`calcolaFontAdattivoPerTesto()`):** Scans custom text strings (e.g., team names, "RECUPERO") character by character to calculate their exact pixel footprint based on Arial Bold proportions. It dynamically returns the maximum safe font size that perfectly fits the current container without horizontal or vertical clipping.
 * **Resize Handlers:** Both `DisplayArciere` and the operator miniature use `ComponentListener` events to instantly trigger this engine and recalculate metrics upon any layout or text change.
 
+### 7.4 Rendering & Performance Optimizations
+To ensure cross-platform fluidity, `ComandoAggiornaDisplay` employs two specific performance strategies:
+- **State Filtering (`aggiornaTestoSicuro`):** A custom helper method filters out redundant `setText()` calls. This strictly prevents the Event Dispatch Thread (EDT) from being flooded with expensive font recalculations during fractional timer ticks when the time string hasn't actually changed.
+- **Buffer Synchronization:** A manual `Toolkit.getDefaultToolkit().sync()` is invoked at the end of the rendering cycle. This forces the OS window manager (which is crucial for Linux/X11 systems) to flush pending graphics events immediately, guaranteeing simultaneous visual updates across all connected screens and preventing "waterfall" tearing effects.
 ---
 
 ## 8. Localisation
@@ -545,6 +549,10 @@ Ogni `DisplayArciere` e il pannello miniatura dell'operatore usano `CardLayout` 
 * **Calcolo Dinamico/Predittivo (`calcolaFontAdattivoPerTesto()`):** Analizza le stringhe di testo personalizzate (es. nomi delle squadre, "RECUPERO") carattere per carattere, calcolando il loro ingombro esatto in pixel basato sulle proporzioni del font Arial Bold. Restituisce dinamicamente la dimensione massima del font sicura per riempire perfettamente il contenitore senza sforare i margini.
 * **Gestione Eventi Resize:** Sia il `DisplayArciere` che la miniatura dell'operatore utilizzano eventi `ComponentListener` per invocare questo motore e ricalcolare istantaneamente le metriche ad ogni cambio di layout o di testo.
 
+### 7.4 Ottimizzazioni di Rendering e Prestazioni
+Per garantire una fluidità perfetta su qualsiasi sistema operativo, `ComandoAggiornaDisplay` adotta due strategie prestazionali:
+- **Filtraggio dello Stato (`aggiornaTestoSicuro`):** Un metodo di supporto blocca le chiamate `setText()` ridondanti. Questo impedisce rigorosamente che l'Event Dispatch Thread (EDT) venga inondato da costosi ricalcoli dei font durante i tick frazionari in cui la stringa del tempo non è effettivamente cambiata.
+- **Sincronizzazione del Buffer:** Alla fine del ciclo di rendering viene richiamato manualmente `Toolkit.getDefaultToolkit().sync()`. Questo forza il window manager del sistema operativo (fondamentale su Linux/X11) a svuotare immediatamente gli eventi grafici in sospeso, garantendo un aggiornamento visivo simultaneo su tutti gli schermi e annullando l'effetto "cascata" (tearing).
 ---
 
 ## 8. Localizzazione
