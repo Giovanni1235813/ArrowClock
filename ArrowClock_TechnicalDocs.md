@@ -123,6 +123,7 @@ Each class implements `Comando` and encapsulates exactly one operation.
 | `ComandoAggiornaLabelEmergenza` | Emergency activation | Freezes the current time on the emergency overlay labels. |
 | `ComandoPulisciLabelEmergenza` | Emergency end / Reset | Clears the emergency overlay labels. |
 | `ComandoCambiaLingua` | L key | Calls `GestoreLingua.toggle()` then `ComandoAggiornaTesti`. |
+| `ComandoInno` | Anthem button on Toolbar | Toggles `INNO_NAZIONALE` phase, blocking UI and switching displays to the Flag card. |
 
 ### 2.3 Engine / Service Classes
 
@@ -134,6 +135,7 @@ Each class implements `Comando` and encapsulates exactly one operation.
 | `GestoreLingua` | Registry | Static map of all localised strings. Supports IT and EN. Keys are hierarchical (`btn.start`, `panel.tempi`, etc.). `t(key)` retrieves, `tf(key, args)` formats with `printf`-style arguments.                                                                                                 |
 | `GestoreLog` | — | Writes timestamped events to `~/ArrowClock_Logs/ArrowClock_Log.txt`. Only writes when `isGaraInCorso == true`. Internally translates hardcoded Italian state strings via `traduciStatoRecupero()`.                                                                                            |
 | `GestoreScorciatoie` | — | Maps keyboard shortcuts to commands using Swing `InputMap`/`ActionMap` on the operator panel.                                                                                                                                                                                                 |
+| `RiproduttoreInno` | Static utility | Portable audio player for `anthem.wav`. Resolves the `.jar` physical path via `ProtectionDomain` to locate the `ArrowClock_Media` directory. |
 
 ### 2.4 UI Builder / Dialog Classes
 
@@ -216,6 +218,10 @@ The application's behaviour is driven entirely by the `Fase` enum value stored i
 
   IDENTIFICATION:
   ATTESA ──I──▶ IDENTIFICAZIONE_MONITOR ──I──▶ ATTESA
+  
+  NATIONAL ANTHEM:
+  ATTESA ──Anthem Btn──▶ INNO_NAZIONALE ──Anthem Btn──▶ ATTESA
+  (During INNO_NAZIONALE, the START/SPACE key acts as Audio Play/Stop)
 ```
 
 ---
@@ -285,9 +291,8 @@ Combo-box items use **key-based internal values** (the Italian string): the rend
 
 ## 9. Logging
 
-`GestoreLog.scriviLog()` appends to `~/ArrowClock_Logs/ArrowClock_Log.txt` using `FileWriter(path, true)` (append mode). Writing only occurs when `app.isGaraInCorso == true`.
-
-Each entry is prefixed with `[HH:MM:SS][Part N]`. The log is written in the **currently active language** at the time of each event. Hardcoded Italian state strings passed from Command classes are intercepted and translated by `traduciStatoRecupero()` and `traduciNotifica()` inside `GestoreLog`.
+`GestoreLog.scriviLog()` appends to `ArrowClock_Log.txt` using `FileWriter(path, true)`. Writing only occurs when `app.isGaraInCorso == true`.
+To ensure strict portability, the logger uses `GestoreLog.class.getProtectionDomain().getCodeSource().getLocation().toURI()` to resolve the physical directory of the executed `.jar` file, creating the `ArrowClock_Logs` folder right next to it, completely independent of the OS user directory.
 
 ---
 
@@ -403,6 +408,7 @@ Ogni classe implementa `Comando` e incapsula esattamente un'operazione.
 | `ComandoAggiornaLabelEmergenza` | Attivazione emergenza | Congela il tempo corrente sulle etichette overlay di emergenza. |
 | `ComandoPulisciLabelEmergenza` | Fine emergenza / Reset | Azzera le etichette overlay di emergenza. |
 | `ComandoCambiaLingua` | Tasto L | Chiama `GestoreLingua.toggle()` poi `ComandoAggiornaTesti`. |
+| `ComandoInno` | Pulsante Inno nella Toolbar | Alterna la fase `INNO_NAZIONALE`, bloccando la UI e mostrando la scheda Bandiera. |
 
 ### 2.3 Classi Engine / Servizio
 
@@ -414,6 +420,7 @@ Ogni classe implementa `Comando` e incapsula esattamente un'operazione.
 | `GestoreLingua` | Registro | Mappa statica di tutte le stringhe localizzate. Supporta IT e EN. `t(chiave)` recupera, `tf(chiave, args)` formatta in stile `printf`. |
 | `GestoreLog` | — | Scrive eventi con timestamp su `~/ArrowClock_Logs/ArrowClock_Log.txt`. Scrive solo quando `isGaraInCorso == true`. Traduce internamente le stringhe di stato tramite `traduciStatoRecupero()`. |
 | `GestoreScorciatoie` | — | Mappa le scorciatoie da tastiera ai comandi usando `InputMap`/`ActionMap` Swing sul pannello operatore. |
+| `RiproduttoreInno` | Utility statica | Riproduttore audio portatile per `anthem.wav`. Risolve il percorso fisico del `.jar` tramite `ProtectionDomain` per individuare la cartella `ArrowClock_Media`. |
 
 ### 2.4 Classi UI Builder / Dialog
 
@@ -496,6 +503,10 @@ Il comportamento dell'applicazione è guidato interamente dal valore dell'enum `
 
   IDENTIFICAZIONE:
   ATTESA ──I──▶ IDENTIFICAZIONE_MONITOR ──I──▶ ATTESA
+  
+  INNO NAZIONALE:
+  ATTESA ──Tasto Inno──▶ INNO_NAZIONALE ──Tasto Inno──▶ ATTESA
+  (Durante INNO_NAZIONALE, il tasto START/SPAZIO funge da Play/Stop Audio)
 ```
 
 ---
@@ -565,9 +576,8 @@ Gli elementi dei combo-box usano **valori interni basati su chiavi** (la stringa
 
 ## 9. Sistema di Log
 
-`GestoreLog.scriviLog()` aggiunge al file `~/ArrowClock_Logs/ArrowClock_Log.txt` usando `FileWriter(path, true)` (modalità append). La scrittura avviene solo quando `app.isGaraInCorso == true`.
-
-Ogni voce è prefissata con `[HH:MM:SS][Parte N]`. Il log viene scritto nella **lingua attualmente attiva** al momento di ogni evento. Le stringhe di stato italiane hardcoded passate dalle classi Comando vengono intercettate e tradotte da `traduciStatoRecupero()` e `traduciNotifica()` all'interno di `GestoreLog`.
+`GestoreLog.scriviLog()` aggiunge al file `ArrowClock_Log.txt` usando `FileWriter(path, true)`. La scrittura avviene solo quando `app.isGaraInCorso == true`.
+Per garantire una portabilità assoluta, il logger utilizza `GestoreLog.class.getProtectionDomain().getCodeSource().getLocation().toURI()` per estrarre la directory fisica del file `.jar` in esecuzione, creando la cartella `ArrowClock_Logs` esattamente di fianco ad esso, svincolandosi dalla cartella utente del sistema operativo.
 
 ---
 

@@ -32,6 +32,7 @@ It supports:
 - **Shoot-off** format
 - **Emergency freeze** with time adjustment dialog
 - **Equipment recovery** phase with booking and +40s increments
+- **National Anthem mode** with automatic flag display and portable `.wav` audio playback
 - **Bilingual UI** (English / Italian, switchable at runtime)
 - **Automatic log file** recording every session event
 
@@ -79,12 +80,19 @@ Archer View
 
 ---
 
-## 📁 Log Files
+## 📁 Log Files & Media (Portable Mode)
 
-When **Match in Progress** is active, ArrowClock automatically records every session event to:
+ArrowClock is designed to be **100% portable**. It does not require installation.
+When **Match in Progress** is active, ArrowClock automatically records every session event. The log folder is created in the exact same directory as the `.jar` executable:
 
-```
-~/ArrowClock_Logs/ArrowClock_Log.txt
+```text
+📁 Your_ArrowClock_Folder/
+ ├── ☕ ArrowClock.jar
+ ├── 📁 ArrowClock_Logs/       (Created automatically)
+ │    └── 📄 ArrowClock_Log.txt
+ └── 📁 ArrowClock_Media/      (Create this to use the Anthem feature)
+      ├── 🎵 anthem.wav
+      └── 🖼️ flag.png
 ```
 
 The log is always **appended** — never overwritten — so historical sessions are preserved.

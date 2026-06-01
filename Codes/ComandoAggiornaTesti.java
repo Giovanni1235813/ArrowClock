@@ -60,6 +60,9 @@ public class ComandoAggiornaTesti implements Comando {
         if (app.btnAdd40s != null) {
             app.btnAdd40s.setText(GestoreLingua.t("btn.reimposta"));
         }
+        if (app.btnInno != null) {
+            app.btnInno.setText(GestoreLingua.t("btn.inno"));
+        }
     }
 
     // ── 2. Etichette statiche ─────────────────────────────────────────────────

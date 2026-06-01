@@ -116,11 +116,19 @@ public class GestoreLog {
     }
 
     private String percorsoFileDiLog() {
-        File logDir = new File(System.getProperty("user.home"), "ArrowClock_Logs");
+        String baseDir;
+        try {
+            // Ricava la cartella fisica esatta in cui si trova il file .jar
+            baseDir = new java.io.File(GestoreLog.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        } catch (Exception e) {
+            baseDir = System.getProperty("user.dir");
+        }
+
+        java.io.File logDir = new java.io.File(baseDir, "ArrowClock_Logs");
         if (!logDir.exists()) {
             logDir.mkdirs();
         }
-        return logDir.getAbsolutePath() + File.separator + "ArrowClock_Log.txt";
+        return logDir.getAbsolutePath() + java.io.File.separator + "ArrowClock_Log.txt";
     }
 
     // --- Metodi di supporto per intercettare i parametri hardcoded dai Comandi ---

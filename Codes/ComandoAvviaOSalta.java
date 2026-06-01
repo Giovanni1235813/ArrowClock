@@ -2,11 +2,6 @@ import java.awt.Color;
 
 /**
  * Gestisce la pressione del pulsante START/SALTA (Spazio).
- * Il comportamento dipende dalla fase attuale:
- * - ATTESA → avvia la preparazione
- * - RECUPERO_ATTESA → avvia il cronometro di recupero
- * - RECUPERO_TIRO → chiude il recupero
- * - altra fase → salta la fase in corso
  */
 public class ComandoAvviaOSalta implements Comando {
 
@@ -19,6 +14,13 @@ public class ComandoAvviaOSalta implements Comando {
     @Override
     public void esegui() {
         if (app.faseAttuale == Fase.EMERGENZA || app.faseAttuale == Fase.IDENTIFICAZIONE_MONITOR) return;
+
+        if (app.faseAttuale == Fase.INNO_NAZIONALE) {
+            //Passiamo l'oggetto 'app' al riproduttore
+            RiproduttoreInno.toggleInno(app);
+            new ComandoAggiornaBottoni(app).esegui();
+            return;
+        }
 
         if (app.faseAttuale == Fase.RECUPERO_ATTESA) {
             avviaRecuperoTiro();
@@ -78,9 +80,7 @@ public class ComandoAvviaOSalta implements Comando {
         MotoreAudio.istanza().azzeraCodaFischi();
 
         if (app.faseAttuale == Fase.PREPARAZIONE_ROSSO) {
-            //MotoreAudio.istanza().eseguiFischi(1, app.isSuonoAttivo); //capiamo se usarlo o meno
             app.timeRemainingSx = 0;
-            // The hardcoded MotoreAudio whistle call here was removed
             if (app.isScontroMode) {
                 new ComandoPassaAlTiroScontro(app, app.iniziaConPrimaParte).esegui();
             } else {
@@ -88,11 +88,11 @@ public class ComandoAvviaOSalta implements Comando {
             }
         } else if (app.faseAttuale == Fase.TIRO_VERDE_GIALLO) {
             app.timeRemainingSx = 0;
-            new ComandoGestisciFineFaseTiro(app, false).esegui(); // Pass false for manual skip
+            new ComandoGestisciFineFaseTiro(app, false).esegui();
         } else if (app.faseAttuale == Fase.SCONTRO_TIRO_SX) {
-            new ComandoScambiaTurnoScontro(app, false).esegui(); // Pass false for manual skip
+            new ComandoScambiaTurnoScontro(app, false).esegui();
         } else if (app.faseAttuale == Fase.SCONTRO_TIRO_DX) {
-            new ComandoScambiaTurnoScontro(app, false).esegui(); // Pass false for manual skip
+            new ComandoScambiaTurnoScontro(app, false).esegui();
         }
     }
 }

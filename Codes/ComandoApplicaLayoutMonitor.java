@@ -1,6 +1,6 @@
 /**
  * Sceglie quale "carta" del CardLayout mostrare su ciascun monitor
- * (SINGOLO, SCONTRO, TURNI o IDENTIFICAZIONE) in base allo stato attuale.
+ * (SINGOLO, SCONTRO, TURNI o IDENTIFICAZIONE o BANDIERA) in base allo stato attuale.
  */
 public class ComandoApplicaLayoutMonitor implements Comando {
 
@@ -13,6 +13,15 @@ public class ComandoApplicaLayoutMonitor implements Comando {
     @Override
     public void esegui() {
         if (app.faseAttuale == Fase.IDENTIFICAZIONE_MONITOR) return;
+
+        // NUOVO BLOCCO: Se siamo nella fase dell'Inno, mostra la bandiera ovunque e fermati.
+        if (app.faseAttuale == Fase.INNO_NAZIONALE) {
+            app.miniaturaCardLayout.show(app.miniaturaContainer, "BANDIERA");
+            for (DisplayArciere da : app.archerDisplays) {
+                da.displayCardLayout.show(da.displayContainer, "BANDIERA");
+            }
+            return;
+        }
 
         boolean isTurniMode = app.btnToggleTurniSpecial.isSelected();
         int monitorScelto  = app.comboSelettoreDisplay.getSelectedIndex();

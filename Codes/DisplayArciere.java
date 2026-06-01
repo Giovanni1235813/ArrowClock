@@ -90,6 +90,8 @@ public class DisplayArciere {
         displayContainer.add(scontroContainer, "SCONTRO");
         displayContainer.add(turniSpecialPanel, "TURNI");
         displayContainer.add(idPanel, "IDENTIFICAZIONE");
+        displayContainer.add(new PannelloBandiera(), "BANDIERA");
+
 
         frame.add(displayContainer);
 

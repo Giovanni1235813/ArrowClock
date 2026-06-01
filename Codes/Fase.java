@@ -1,3 +1,4 @@
+// Fase.java
 public enum Fase {
     ATTESA,
     PREPARAZIONE_ROSSO,
@@ -7,5 +8,6 @@ public enum Fase {
     EMERGENZA,
     RECUPERO_ATTESA,
     RECUPERO_TIRO,
-    IDENTIFICAZIONE_MONITOR
+    IDENTIFICAZIONE_MONITOR,
+    INNO_NAZIONALE // Nuova fase esclusiva per la riproduzione dell'inno
 }

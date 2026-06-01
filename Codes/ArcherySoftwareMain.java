@@ -40,7 +40,7 @@ public class ArcherySoftwareMain {
     JLabel    minTimerSx, minTimerDx;
     JLabel    minTurniSx, minTurniDx;
 
-    // NUOVI CAMPI: Memorizzano i font dell'anteprima calcolati al volo al resize
+    //Memorizzano i font dell'anteprima calcolati al volo al resize
     public Font fontMinNumeri;
     public Font fontMinStop;
     public Font fontMinTesti;
@@ -70,6 +70,7 @@ public class ArcherySoftwareMain {
     JButton        btnSuono, btnTema;
     JToggleButton  btnToggleTurniSpecial, btnIdentificaMonitor;
     JComboBox<String> comboSelettoreDisplay;
+    JToggleButton btnInno;
 
     // ─── i18n – pulsante lingua ───────────────────────────────────────────────
     JButton       btnLingua;

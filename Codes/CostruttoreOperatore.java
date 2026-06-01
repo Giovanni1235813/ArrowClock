@@ -178,7 +178,6 @@ public class CostruttoreOperatore {
     }
 
     private JPanel costruisciToolbar() {
-        // Container principale su due righe per evitare tagli su schermi piccoli
         JPanel toolbarContainer = new JPanel(new GridLayout(2, 1, 0, 5));
         toolbarContainer.setOpaque(false);
 
@@ -209,10 +208,29 @@ public class CostruttoreOperatore {
         row2.addSeparator(new Dimension(30, 0));
         row2.add(costruisciBottoneIdentifica());
 
+        //Pulsante Inno Nazionale
+        row2.addSeparator(new Dimension(30, 0));
+        row2.add(costruisciBottoneInno());
+
         toolbarContainer.add(row1);
         toolbarContainer.add(row2);
-
         return toolbarContainer;
+    }
+
+    private JToggleButton costruisciBottoneInno() {
+        // MODIFICA: Uso di GestoreLingua.t("btn.inno")
+        app.btnInno = new JToggleButton(GestoreLingua.t("btn.inno")) {
+            @Override public void setEnabled(boolean b) {
+                super.setEnabled(b);
+                Color n = app.isDarkMode ? new Color(60,60,60) : new Color(220,220,220);
+                Color d = app.isDarkMode ? new Color(40,40,40) : new Color(180,180,180);
+                Color f = app.isDarkMode ? Color.WHITE : Color.BLACK;
+                setBackground(b ? n : d); setForeground(b ? f : Color.GRAY);
+            }
+        };
+        app.btnInno.setFocusable(false);
+        app.btnInno.addActionListener(e -> new ComandoInno(app).esegui());
+        return app.btnInno;
     }
 
     private JButton costruisciBottoneLingua() {
@@ -393,6 +411,7 @@ public class CostruttoreOperatore {
         app.miniaturaContainer.add(costruisciMinSingolo(), "SINGOLO");
         app.miniaturaContainer.add(costruisciMinScontro(),  "SCONTRO");
         app.miniaturaContainer.add(costruisciMinId(),       "IDENTIFICAZIONE");
+        app.miniaturaContainer.add(new PannelloBandiera(), "BANDIERA");
 
         q.add(app.miniaturaContainer, BorderLayout.CENTER);
         return q;

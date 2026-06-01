@@ -33,6 +33,8 @@ public class GestoreLingua {
         r("btn.display.on",         "Display Turni: ON (D)",                "Turn Display: ON (D)");
         r("btn.idmonitor",          "MOSTRA ID MONITOR (I)",                "SHOW MONITOR ID (I)");
         r("lbl.sux",                " Su: ",                                " On: ");
+        r("btn.inno",               "Inno",                                 "Anthem");
+        r("display.bandiera",       "BANDIERA",                             "FLAG");
 
         // ── Pulsanti di controllo ─────────────────────────────────────────────
         r("btn.start",
