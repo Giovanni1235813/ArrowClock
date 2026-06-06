@@ -1,42 +1,102 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Gestisce la scrittura del log partita su file.
- * Unica responsabilità: tradurre gli eventi di gara in righe di testo
- * e salvarle nel file di log dell'utente.
+ *
+ * FIX #3a – Writer bufferizzato persistente: invece di aprire e chiudere
+ *            il file ad ogni riga, un BufferedWriter viene aperto una volta
+ *            sola all'inizio della sessione e chiuso solo allo shutdown.
+ *            Questo elimina il costo I/O ripetuto sul thread Swing.
+ *
+ * FIX #3b – Scrittura asincrona off-EDT: ogni chiamata a scriviLog() accoda
+ *            il messaggio su un ExecutorService a thread singolo dedicato,
+ *            così il thread Swing non viene mai bloccato da operazioni su disco.
+ *
+ * FIX #3c – Limite dimensione file: se il file supera MAX_LOG_BYTES (5 MB),
+ *            viene ruotato automaticamente (rinominato con timestamp) e ne
+ *            viene creato uno nuovo, prevenendo la crescita illimitata.
+ *
+ * FIX #4  – Percorso sicuro: ottieniPercorsoBase() verifica che il percorso
+ *            calcolato dal ClassLoader sia scrivibile; se non lo è, ricade
+ *            sulla home utente invece che su user.dir (che potrebbe essere
+ *            una directory di sistema).
+ *
+ * FIX #6  – Eccezioni loggate con java.util.logging invece di essere silenziate.
  */
 public class GestoreLog {
 
+    private static final Logger LOG = Logger.getLogger(GestoreLog.class.getName());
+
+    /** Soglia di rotazione: 5 MB */
+    private static final long MAX_LOG_BYTES = 5L * 1024 * 1024;
+
     private final ArcherySoftwareMain app;
+
+    // FIX #3a – Writer tenuto aperto per tutta la sessione
+    private BufferedWriter writerCorrente;
+    private String percorsoCorrente;
+
+    // FIX #3b – Executor dedicato: tutte le scritture avvengono su questo thread,
+    //           mai sul thread Swing (EDT).
+    private final ExecutorService esecutoreLog = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r, "LogWriter");
+        t.setDaemon(true);
+        return t;
+    });
 
     public GestoreLog(ArcherySoftwareMain app) {
         this.app = app;
     }
 
+    // ── API pubblica ──────────────────────────────────────────────────────────
+
     public void scriviLog(String messaggio) {
         if (!app.isGaraInCorso) return;
 
-        String rigaLog;
-        if (messaggio.equals("\n")) {
-            rigaLog = "";
-        } else {
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-            int parte = (app.spinParte != null) ? (int) app.spinParte.getValue() : 1;
+        // Calcola la riga sul thread chiamante (EDT), poi delega la scrittura
+        final String rigaLog = formattaRiga(messaggio);
 
-            // Richiama dinamicamente la traduzione della parola "Parte"
-            String prefissoParte = GestoreLingua.t("log.prefix.parte");
-            rigaLog = "[" + timestamp + "][" + prefissoParte + " " + parte + "] " + messaggio;
-        }
+        // FIX #3b – La scrittura su disco avviene fuori dall'EDT
+        esecutoreLog.submit(() -> {
+            try {
+                assicuraWriterAperto();
+                ruotaSeNecessario();
+                writerCorrente.write(rigaLog);
+                writerCorrente.newLine();
+                writerCorrente.flush();
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Errore scrittura log", e);
+            }
+        });
+    }
 
-        try (PrintWriter out = new PrintWriter(new FileWriter(percorsoFileDiLog(), true))) {
-            out.println(rigaLog);
-        } catch (IOException e) {
-            System.err.println("Errore scrittura log: " + e.getMessage());
+    /** Chiude il writer e attende la fine dei task pendenti. Chiamare prima di System.exit(). */
+    public void chiudi() {
+        esecutoreLog.submit(() -> {
+            if (writerCorrente != null) {
+                try {
+                    writerCorrente.flush();
+                    writerCorrente.close();
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, "Errore chiusura writer log", e);
+                } finally {
+                    writerCorrente = null;
+                }
+            }
+        });
+        esecutoreLog.shutdown();
+        try {
+            esecutoreLog.awaitTermination(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -102,7 +162,6 @@ public class GestoreLog {
 
     public void logRecupero(String stato) {
         String statoTradotto = traduciStatoRecupero(stato);
-
         if (stato.equals("ATTIVATO (40s)") || stato.equals("PRENOTATO")) scriviLog("\n");
         scriviLog(GestoreLingua.tf("log.recupero.stato", statoTradotto));
         if (stato.equals("CONCLUSO") || stato.contains("ANNULLATO")) scriviLog("\n");
@@ -115,23 +174,94 @@ public class GestoreLog {
         scriviLog("\n");
     }
 
-    private String percorsoFileDiLog() {
-        String baseDir;
-        try {
-            // Ricava la cartella fisica esatta in cui si trova il file .jar
-            baseDir = new java.io.File(GestoreLog.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-        } catch (Exception e) {
-            baseDir = System.getProperty("user.dir");
-        }
+    // ── Helpers interni (eseguiti sull'EDT, prima di accodare) ────────────────
 
-        java.io.File logDir = new java.io.File(baseDir, "ArrowClock_Logs");
-        if (!logDir.exists()) {
-            logDir.mkdirs();
-        }
-        return logDir.getAbsolutePath() + java.io.File.separator + "ArrowClock_Log.txt";
+    private String formattaRiga(String messaggio) {
+        if (messaggio.equals("\n")) return "";
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        int parte = (app.spinParte != null) ? (int) app.spinParte.getValue() : 1;
+        String prefissoParte = GestoreLingua.t("log.prefix.parte");
+        return "[" + timestamp + "][" + prefissoParte + " " + parte + "] " + messaggio;
     }
 
-    // --- Metodi di supporto per intercettare i parametri hardcoded dai Comandi ---
+    // ── Helpers interni (eseguiti sul thread LogWriter) ───────────────────────
+
+    /** Apre il writer se non è già aperto o se il file è cambiato. */
+    private void assicuraWriterAperto() throws IOException {
+        String percorso = percorsoFileDiLog();
+        if (writerCorrente == null || !percorso.equals(percorsoCorrente)) {
+            if (writerCorrente != null) {
+                try { writerCorrente.close(); } catch (IOException ignored) {}
+            }
+            percorsoCorrente = percorso;
+            writerCorrente = new BufferedWriter(new FileWriter(percorso, true));
+        }
+    }
+
+    /**
+     * FIX #3c – Se il file supera MAX_LOG_BYTES lo rinomina con un timestamp
+     * e apre un file nuovo, evitando la crescita illimitata su disco.
+     */
+    private void ruotaSeNecessario() throws IOException {
+        File file = new File(percorsoCorrente);
+        if (!file.exists() || file.length() < MAX_LOG_BYTES) return;
+
+        // Chiude il writer corrente prima di rinominare
+        try { writerCorrente.close(); } catch (IOException ignored) {}
+        writerCorrente = null;
+
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        File archiviato = new File(file.getParent(), "ArrowClock_Log_" + timestamp + ".txt");
+        if (!file.renameTo(archiviato)) {
+            LOG.warning("Impossibile ruotare il file di log: " + file.getAbsolutePath());
+        }
+
+        // Riapre un writer sul file nuovo (vuoto)
+        writerCorrente = new BufferedWriter(new FileWriter(percorsoCorrente, true));
+        LOG.info("Log ruotato: " + archiviato.getName());
+    }
+
+    /**
+     * FIX #4 – Verifica che il percorso ricavato dal ClassLoader sia
+     * effettivamente scrivibile. Se non lo è, usa la home utente.
+     */
+    private String percorsoFileDiLog() {
+        String baseDir = ottieniPercorsoBaseScrivibile();
+        File logDir = new File(baseDir, "ArrowClock_Logs");
+        if (!logDir.exists() && !logDir.mkdirs()) {
+            LOG.warning("Impossibile creare la cartella log: " + logDir.getAbsolutePath());
+        }
+        return logDir.getAbsolutePath() + File.separator + "ArrowClock_Log.txt";
+    }
+
+    // FIX #4 – Restituisce un percorso base garantito scrivibile.
+    private static String ottieniPercorsoBaseScrivibile() {
+        // 1° tentativo: cartella del JAR
+        try {
+            File jarDir = new File(
+                GestoreLog.class.getProtectionDomain().getCodeSource().getLocation().toURI()
+            ).getParentFile();
+            if (jarDir != null && jarDir.canWrite()) {
+                return jarDir.getAbsolutePath();
+            }
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Impossibile ricavare la cartella del JAR", e);
+        }
+
+        // 2° tentativo: home utente (sicura, sempre scrivibile)
+        String home = System.getProperty("user.home");
+        if (home != null && new File(home).canWrite()) {
+            LOG.info("Percorso log ricaduto sulla home utente: " + home);
+            return home;
+        }
+
+        // 3° tentativo: directory temporanea di sistema
+        String tmp = System.getProperty("java.io.tmpdir");
+        LOG.warning("Percorso log ricaduto sulla directory temporanea: " + tmp);
+        return tmp;
+    }
+
+    // ── Traduttori ────────────────────────────────────────────────────────────
 
     private String traduciStatoRecupero(String stato) {
         return switch (stato) {
@@ -141,7 +271,7 @@ public class GestoreLog {
             case "CONCLUSO"               -> GestoreLingua.t("log.state.concluso");
             case "ANNULLATO"              -> GestoreLingua.t("log.state.annullato");
             case "ANNULLATO (Reset Gara)" -> GestoreLingua.t("log.state.annullato.reset");
-            default -> stato; // Fallback di sicurezza
+            default -> stato;
         };
     }
 
@@ -154,10 +284,9 @@ public class GestoreLog {
             return GestoreLingua.tf("log.notifica.fine_parte", p);
         }
         if (messaggio.startsWith("AGGIUNTI 40s")) {
-            // Estrae il tempo inserito dinamicamente dai Comandi
             String tempo = messaggio.substring(messaggio.lastIndexOf(": ") + 2).replace("s)", "");
             return GestoreLingua.tf("log.notifica.add40", Integer.parseInt(tempo));
         }
-        return messaggio; // Fallback
+        return messaggio;
     }
 }

@@ -2,11 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Costruisce l'intera interfaccia della finestra operatore.
  * Unica responsabilità: assemblare e collegare i componenti Swing
  * della finestra di controllo principale.
+ *
+ * FIX #5 – chiudiApp(): il pulsante X e il WindowListener chiamano
+ *           chiudiApp() invece di System.exit(0) direttamente.
+ *           chiudiApp() esegue il cleanup ordinato delle risorse
+ *           (audio, log) prima di uscire, garantendo che nessuna
+ *           risorsa hardware resti aperta.
  */
 public class CostruttoreOperatore {
 
@@ -21,8 +29,17 @@ public class CostruttoreOperatore {
         if (app.appIcon != null) app.operatorFrame.setIconImage(app.appIcon);
         app.operatorFrame.setUndecorated(true);
         app.operatorFrame.setSize(1150, 650);
-        app.operatorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // FIX #5 – Non usiamo EXIT_ON_CLOSE: la chiusura passa da chiudiApp()
+        app.operatorFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         app.operatorFrame.setLayout(new BorderLayout());
+
+        // FIX #5 – WindowListener per la X del sistema operativo (ALT+F4, ecc.)
+        app.operatorFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                chiudiApp();
+            }
+        });
 
         app.operatorFrame.add(costruisciTitleBar(), BorderLayout.NORTH);
 
@@ -43,6 +60,27 @@ public class CostruttoreOperatore {
         new ComandoAggiornaBottoni(app).esegui();
     }
 
+    /**
+     * FIX #5 – Punto unico di uscita dall'applicazione.
+     * Ferma i timer, rilascia le risorse audio e chiude il writer del log
+     * prima di chiamare System.exit().
+     */
+    private void chiudiApp() {
+        // 1. Ferma i timer Swing per evitare tick residui durante lo shutdown
+        if (app.countdownTimer != null) app.countdownTimer.stop();
+        if (app.flashTimer    != null) app.flashTimer.stop();
+
+        // 2. Ferma l'inno e rilascia le risorse audio (FIX #1, #2)
+        RiproduttoreInno.fermaInno();
+        MotoreAudio.istanza().spegni();
+
+        // 3. Chiude il writer del log in modo ordinato (FIX #3a)
+        app.gestoreLog.chiudi();
+
+        // 4. Ora è sicuro uscire
+        System.exit(0);
+    }
+
     // NEW METHODS: Responsive Font Update for the Miniature Panel
     private void applicaListenerMiniatura() {
         app.miniaturaContainer.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -60,12 +98,10 @@ public class CostruttoreOperatore {
                 app.miniaturaContainer.getGraphicsConfiguration()
         );
 
-        // Salviamo i font generati nei campi dell'applicazione
         app.fontMinNumeri = new Font("Arial", Font.BOLD, dim[0]);
         app.fontMinStop   = new Font("Arial", Font.BOLD, dim[1]);
         app.fontMinTesti  = new Font("Arial", Font.BOLD, dim[2]);
 
-        // Eseguiamo l'applicazione immediata del font corretto in base allo stato attuale
         if (app.faseAttuale == Fase.EMERGENZA) {
             Font fTimerSide = new Font("Arial", Font.BOLD, (int)(app.fontMinStop.getSize() * 0.8));
             app.minTimerSingolo.setFont(app.fontMinStop);
@@ -90,7 +126,6 @@ public class CostruttoreOperatore {
         }
 
         if (app.minIdLabel != null) {
-            // MODIFICATO: Anche la miniatura calcola al volo lo spazio per la sua stringa specifica di ID
             int adaptiveSizeMin = MotoreFontDinamico.calcolaFontAdattivoPerTesto(
                     app.minIdLabel.getText(),
                     app.miniaturaContainer.getWidth(),
@@ -125,7 +160,8 @@ public class CostruttoreOperatore {
 
         btnMin.addActionListener(e -> app.operatorFrame.setState(Frame.ICONIFIED));
         btnMax.addActionListener(e -> toggleMassimizza(btnMax));
-        btnClose.addActionListener(e -> System.exit(0));
+        // FIX #5 – chiudiApp() invece di System.exit(0)
+        btnClose.addActionListener(e -> chiudiApp());
 
         app.operatorFrame.addWindowStateListener(e ->
                 btnMax.setText(((e.getNewState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH)
@@ -181,7 +217,6 @@ public class CostruttoreOperatore {
         JPanel toolbarContainer = new JPanel(new GridLayout(2, 1, 0, 5));
         toolbarContainer.setOpaque(false);
 
-        // --- Prima riga ---
         JToolBar row1 = new JToolBar();
         row1.setFloatable(false); row1.setBorderPainted(false);
         row1.setOpaque(false); row1.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -196,7 +231,6 @@ public class CostruttoreOperatore {
         row1.addSeparator(new Dimension(15, 0));
         row1.add(costruisciBottoneLingua());
 
-        // --- Seconda riga ---
         JToolBar row2 = new JToolBar();
         row2.setFloatable(false); row2.setBorderPainted(false);
         row2.setOpaque(false); row2.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -207,8 +241,6 @@ public class CostruttoreOperatore {
         row2.add(costruisciComboSelettoreDisplay());
         row2.addSeparator(new Dimension(30, 0));
         row2.add(costruisciBottoneIdentifica());
-
-        //Pulsante Inno Nazionale
         row2.addSeparator(new Dimension(30, 0));
         row2.add(costruisciBottoneInno());
 
@@ -218,7 +250,6 @@ public class CostruttoreOperatore {
     }
 
     private JToggleButton costruisciBottoneInno() {
-        // MODIFICA: Uso di GestoreLingua.t("btn.inno")
         app.btnInno = new JToggleButton(GestoreLingua.t("btn.inno")) {
             @Override public void setEnabled(boolean b) {
                 super.setEnabled(b);
@@ -269,7 +300,8 @@ public class CostruttoreOperatore {
 
         if (app.isGaraInCorso) {
             app.btnGaraInCorso.setBackground(Color.GREEN);
-            app.btnGaraInCorso.setForeground(Color.BLACK);            app.attualeVoleeProva = 1;
+            app.btnGaraInCorso.setForeground(Color.BLACK);
+            app.attualeVoleeProva = 1;
             if (app.spinVolee != null) app.spinVolee.setValue(0);
             if (app.spinParte != null) app.spinParte.setValue(1);
             app.turnoCorrente = 1;
@@ -343,10 +375,7 @@ public class CostruttoreOperatore {
 
     private JComboBox<String> costruisciComboSelettoreDisplay() {
         app.comboSelettoreDisplay = FabbricaCombo.crea(new String[0], app);
-
-        // Assegna forzatamente il renderer localizzato per gestire il tema
         app.comboSelettoreDisplay.setRenderer(new RendererComboLocalizzato(app));
-
         for (int i = 0; i < Math.max(1, app.archerDisplays.size()); i++) {
             app.comboSelettoreDisplay.addItem("Monitor " + (i + 1));
         }
@@ -543,7 +572,7 @@ public class CostruttoreOperatore {
     private void aggiornaTotaleDaFrecciaLineare() {
         String preset = String.valueOf(app.comboPreset.getSelectedItem());
         int sec = (int) app.spinSecFrecciaLineare.getValue();
-        if ("INDOOR".equals(preset))  app.spinT2.setValue(sec * 3);
+        if ("INDOOR".equals(preset))       app.spinT2.setValue(sec * 3);
         else if ("OUTDOOR".equals(preset)) app.spinT2.setValue(sec * 6);
     }
 
@@ -563,6 +592,7 @@ public class CostruttoreOperatore {
         app.comboTurni = FabbricaCombo.crea(new String[]{
                 "- Nessuno -",
                 "ABC",
+                "ABC - DEF",
                 "AB - CD",
                 "AB - CD - EF",
                 "A - B",
