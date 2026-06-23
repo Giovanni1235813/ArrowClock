@@ -136,6 +136,10 @@ public class GestoreLingua {
         r("log.emergenza.off",  "!!! EMERGENZA RISOLTA !!! Gara ripresa.", "!!! EMERGENCY RESOLVED !!! Match resumed.");
         r("log.manual.time",    "[MODIFICA MANUALE] %s: tempo variato da %ds a %ds", "[MANUAL EDIT] %s: time changed from %ds to %ds");
         r("log.recupero.stato", "[RECUPERO MATERIALE] Stato: %s", "[EQUIPMENT RECOVERY] Status: %s");
+        r("log.inno.attivata",    "--- MODALITÀ INNO NAZIONALE ATTIVATA ---", "--- NATIONAL ANTHEM MODE ACTIVATED ---");
+        r("log.inno.disattivata", "--- MODALITÀ INNO NAZIONALE DISATTIVATA ---", "--- NATIONAL ANTHEM MODE DEACTIVATED ---");
+        r("log.inno.partito",     "Riproduzione Inno Nazionale avviata", "National Anthem playback started");
+        r("log.inno.finito",      "Riproduzione Inno Nazionale terminata/interrotta", "National Anthem playback finished/stopped");
 
         // ── Componenti hardcoded dei Log ──────────────────────────────────────
         r("log.prefix.parte",           "Parte",                        "Part");

@@ -61,13 +61,13 @@ public class ComandoBloccaInterfaccia implements Comando {
             }
         }
 
-        app.btnTema.setEnabled((modoAttivo && !isIdMode) || isInnoMode);
+        app.btnTema.setEnabled(modoAttivo && !isIdMode && !isInnoMode);
         app.btnToggleTurniSpecial.setEnabled(modoAttivo && !isIdMode && !isInnoMode);
         app.comboSelettoreDisplay.setEnabled(modoAttivo && !app.btnToggleTurniSpecial.isSelected() && !isIdMode && !isInnoMode);
-        app.btnIdentificaMonitor.setEnabled((modoAttivo || isIdMode) && !isInnoMode);
+        app.btnIdentificaMonitor.setEnabled((modoAttivo || isIdMode) && !isInnoMode && !garaSuON);
 
         if (app.btnLingua != null) {
-            app.btnLingua.setEnabled((!garaSuON && !isIdMode) || isInnoMode);
+            app.btnLingua.setEnabled((!garaSuON && !isIdMode) && !isInnoMode);
         }
 
         if (app.btnInno != null) {

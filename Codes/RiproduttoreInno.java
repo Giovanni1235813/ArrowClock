@@ -99,8 +99,9 @@ public class RiproduttoreInno {
                 if (event.getType() == LineEvent.Type.STOP) {
                     inRiproduzione = false;
                     if (app != null) {
+                        app.gestoreLog.logInno("FINITO");
                         javax.swing.SwingUtilities.invokeLater(() ->
-                            new ComandoAggiornaBottoni(app).esegui()
+                                new ComandoAggiornaBottoni(app).esegui()
                         );
                     }
                 }
@@ -109,6 +110,10 @@ public class RiproduttoreInno {
             clip.open(audioStream);
             clip.start();
             inRiproduzione = true;
+
+            if (app != null) {
+                app.gestoreLog.logInno("PARTITO");
+            }
 
         } catch (Exception e) {
             // FIX #6 – Loggato invece di stampato su stderr o silenziato

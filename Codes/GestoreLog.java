@@ -156,6 +156,15 @@ public class GestoreLog {
         scriviLog("\n");
     }
 
+    public void logInno(String stato) {
+        switch (stato) {
+            case "ATTIVATA"    -> scriviLog(GestoreLingua.t("log.inno.attivata"));
+            case "DISATTIVATA" -> scriviLog(GestoreLingua.t("log.inno.disattivata"));
+            case "PARTITO"     -> scriviLog(GestoreLingua.t("log.inno.partito"));
+            case "FINITO"      -> scriviLog(GestoreLingua.t("log.inno.finito"));
+        }
+    }
+
     public void logModificaManualeTempo(int vecchio, int nuovo, String contesto) {
         scriviLog(GestoreLingua.tf("log.manual.time", contesto, vecchio, nuovo));
     }

@@ -30,7 +30,7 @@ public class GestoreScorciatoie {
         registra(im, am, "D",             "displayTurni",  () -> { if (app.btnToggleTurniSpecial.isEnabled())  app.btnToggleTurniSpecial.doClick(); });
         registra(im, am, "I",             "idMonitor",     () -> { if (app.btnIdentificaMonitor.isEnabled())   app.btnIdentificaMonitor.doClick(); });
         registra(im, am, "T",             "ciclaTurni",    () -> { if (app.btnAlternaMetata.isEnabled())       app.btnAlternaMetata.doClick(); });
-        registra(im, am, "L",             "lingua",        () -> new ComandoCambiaLingua(app).esegui());
+        registra(im, am, "L",             "lingua",        () -> { if (app.btnLingua != null && app.btnLingua.isEnabled()) new ComandoCambiaLingua(app).esegui(); });
 
         registra(im, am, "UP",   "voleeUp",   this::incrementaVolee);
         registra(im, am, "DOWN", "voleeDown", this::decrementaVolee);
