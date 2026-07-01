@@ -124,6 +124,20 @@ public class GestoreLingua {
 
         // ── Log Eventi ────────────────────────────────────────────────────────
         r("log.session.start",  "=== NUOVA SESSIONE ARROWCLOCK AVVIATA ===", "=== NEW ARROWCLOCK SESSION STARTED ===");
+
+        // ── Sessione software (apertura / chiusura / riepilogo gara) ──────────
+        r("log.software.avvio",     "===== ARROWCLOCK AVVIATO: %s =====",   "===== ARROWCLOCK STARTED: %s =====");
+        r("log.software.chiusura",  "===== ARROWCLOCK CHIUSO: %s =====",    "===== ARROWCLOCK CLOSED: %s =====");
+        r("log.riepilogo.titolo",   "----- RIEPILOGO GARA EFFETTIVA (solo con 'Gara in Corso' ATTIVA) -----",
+                                     "----- ACTUAL MATCH SUMMARY (only while 'Match in Progress' was ON) -----");
+        r("log.riepilogo.nogara",   "Nessuna gara registrata in questa sessione ('Gara in Corso' mai attivata).",
+                                     "No match recorded in this session ('Match in Progress' never enabled).");
+        r("log.riepilogo.durata",   "Tempo effettivo di gara: %s",          "Actual match time: %s");
+        r("log.riepilogo.parti",    "Parti raggiunte: %d",                  "Parts reached: %d");
+        r("log.riepilogo.volee",    "Volée di gara completate: %d",         "Match ends completed: %d");
+        r("log.riepilogo.prova",    "Volée di prova completate: %d",        "Trial ends completed: %d");
+        r("log.riepilogo.emergenze","Emergenze attivate: %d",              "Emergencies triggered: %d");
+        r("log.riepilogo.recuperi", "Recuperi materiale effettuati: %d",    "Equipment recoveries performed: %d");
         r("log.volee.prova.start", "--- INIZIO VOLÉE DI PROVA %d ---", "--- TRIAL END %d STARTED ---");
         r("log.parte.start",    ">>> INIZIO PARTE %d <<<", ">>> PART %d STARTED <<<");
         r("log.volee.start",    "--- INIZIO VOLÉE %d ---", "--- END %d STARTED ---");

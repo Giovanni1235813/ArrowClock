@@ -52,6 +52,20 @@ public class GestoreLog {
         return t;
     });
 
+    // ── Statistiche della sessione software (per il riepilogo di chiusura) ─────
+    // Tutti i contatori vengono aggiornati SOLO mentre "Gara in Corso" è attiva,
+    // così il riepilogo riflette la sola competizione effettiva e non i momenti
+    // in cui il pulsante era spento.
+    private String  istanteAvvioSoftware   = null;   // testo "yyyy-MM-dd HH:mm:ss"
+    private long    durataGaraAccumulataMs = 0;       // somma dei soli periodi ON
+    private long    istanteInizioGaraMs    = -1;      // -1 = gara attualmente ferma
+    private boolean garaMaiAttivata        = true;
+    private int     voleeGaraCompletate    = 0;
+    private int     voleeProvaCompletate   = 0;
+    private int     emergenzeTotali        = 0;
+    private int     recuperiTotali         = 0;
+    private int     maxParteRaggiunta      = 1;
+
     public GestoreLog(ArcherySoftwareMain app) {
         this.app = app;
     }
@@ -60,22 +74,95 @@ public class GestoreLog {
 
     public void scriviLog(String messaggio) {
         if (!app.isGaraInCorso) return;
-
         // Calcola la riga sul thread chiamante (EDT), poi delega la scrittura
-        final String rigaLog = formattaRiga(messaggio);
+        accodaRigaGrezza(formattaRiga(messaggio));
+    }
 
-        // FIX #3b – La scrittura su disco avviene fuori dall'EDT
+    /**
+     * Scrittura non soggetta al filtro "Gara in Corso": usata solo per le righe
+     * di cornice della sessione software (avvio, chiusura, riepilogo), che devono
+     * essere registrate anche a gara ferma.
+     */
+    private void scriviLogForzato(String riga) {
+        accodaRigaGrezza(riga);
+    }
+
+    // FIX #3b – La scrittura su disco avviene sempre fuori dall'EDT
+    private void accodaRigaGrezza(String riga) {
         esecutoreLog.submit(() -> {
             try {
                 assicuraWriterAperto();
                 ruotaSeNecessario();
-                writerCorrente.write(rigaLog);
+                writerCorrente.write(riga);
                 writerCorrente.newLine();
                 writerCorrente.flush();
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Errore scrittura log", e);
             }
         });
+    }
+
+    // ── Sessione software: apertura, transizioni gara, riepilogo di chiusura ──
+
+    /** Registra l'istante di avvio del software (scritto subito su file). */
+    public void registraAvvioSoftware() {
+        istanteAvvioSoftware = timestampCompleto();
+        scriviLogForzato("");
+        scriviLogForzato(GestoreLingua.tf("log.software.avvio", istanteAvvioSoftware));
+    }
+
+    /** Da chiamare quando "Gara in Corso" passa a ON: apre un intervallo di gara. */
+    public void registraGaraOn() {
+        garaMaiAttivata = false;
+        istanteInizioGaraMs = System.currentTimeMillis();
+    }
+
+    /** Da chiamare quando "Gara in Corso" passa a OFF: chiude l'intervallo attivo. */
+    public void registraGaraOff() {
+        if (istanteInizioGaraMs >= 0) {
+            durataGaraAccumulataMs += System.currentTimeMillis() - istanteInizioGaraMs;
+            istanteInizioGaraMs = -1;
+        }
+    }
+
+    /**
+     * Scrive la cornice di chiusura e il riepilogo della gara effettiva.
+     * Va chiamato prima di {@link #chiudi()}.
+     */
+    public void scriviRiepilogoChiusura() {
+        finalizzaSessione();
+        for (String riga : costruisciRigheRiepilogo()) scriviLogForzato(riga);
+    }
+
+    /** Chiude l'eventuale intervallo di gara aperto e aggiorna l'ultima parte raggiunta. */
+    void finalizzaSessione() {
+        registraGaraOff(); // se il software si chiude a gara ancora attiva
+        if (app.spinParte != null) {
+            maxParteRaggiunta = Math.max(maxParteRaggiunta, (int) app.spinParte.getValue());
+        }
+    }
+
+    /**
+     * Costruisce le righe del riepilogo di chiusura senza effetti collaterali.
+     * Estratto per permettere ai test di verificarne il contenuto.
+     */
+    java.util.List<String> costruisciRigheRiepilogo() {
+        java.util.List<String> righe = new java.util.ArrayList<>();
+        righe.add("");
+        righe.add(GestoreLingua.tf("log.software.chiusura", timestampCompleto()));
+        righe.add(GestoreLingua.t("log.riepilogo.titolo"));
+        if (garaMaiAttivata) {
+            righe.add(GestoreLingua.t("log.riepilogo.nogara"));
+        } else {
+            righe.add(GestoreLingua.tf("log.riepilogo.durata", formattaDurata(durataGaraAccumulataMs)));
+            righe.add(GestoreLingua.tf("log.riepilogo.parti", maxParteRaggiunta));
+            righe.add(GestoreLingua.tf("log.riepilogo.volee", voleeGaraCompletate));
+            righe.add(GestoreLingua.tf("log.riepilogo.prova", voleeProvaCompletate));
+            righe.add(GestoreLingua.tf("log.riepilogo.emergenze", emergenzeTotali));
+            righe.add(GestoreLingua.tf("log.riepilogo.recuperi", recuperiTotali));
+        }
+        righe.add("=========================================");
+        return righe;
     }
 
     /** Chiude il writer e attende la fine dei task pendenti. Chiamare prima di System.exit(). */
@@ -109,6 +196,9 @@ public class GestoreLog {
 
     public void logInizioVolee() {
         int v = (int) app.spinVolee.getValue();
+        if (app.isGaraInCorso && app.spinParte != null) {
+            maxParteRaggiunta = Math.max(maxParteRaggiunta, (int) app.spinParte.getValue());
+        }
         scriviLog("\n");
         if (v == 0) {
             scriviLog(GestoreLingua.tf("log.volee.prova.start", app.attualeVoleeProva));
@@ -124,6 +214,10 @@ public class GestoreLog {
 
     public void logFineVolee() {
         int v = (int) app.spinVolee.getValue();
+        if (app.isGaraInCorso) {
+            if (v == 0) voleeProvaCompletate++;
+            else        voleeGaraCompletate++;
+        }
         if (v == 0) {
             scriviLog(GestoreLingua.tf("log.volee.prova.end", app.attualeVoleeProva));
         } else {
@@ -151,6 +245,7 @@ public class GestoreLog {
     }
 
     public void logEmergenza(boolean attivata) {
+        if (attivata && app.isGaraInCorso) emergenzeTotali++;
         scriviLog("\n");
         scriviLog(GestoreLingua.t(attivata ? "log.emergenza.on" : "log.emergenza.off"));
         scriviLog("\n");
@@ -170,6 +265,9 @@ public class GestoreLog {
     }
 
     public void logRecupero(String stato) {
+        // "INIZIATO" segna l'inizio effettivo del tiro di recupero (sia immediato
+        // sia da prenotazione): è il momento giusto per contarne uno.
+        if ("INIZIATO".equals(stato) && app.isGaraInCorso) recuperiTotali++;
         String statoTradotto = traduciStatoRecupero(stato);
         if (stato.equals("ATTIVATO (40s)") || stato.equals("PRENOTATO")) scriviLog("\n");
         scriviLog(GestoreLingua.tf("log.recupero.stato", statoTradotto));
@@ -184,6 +282,18 @@ public class GestoreLog {
     }
 
     // ── Helpers interni (eseguiti sull'EDT, prima di accodare) ────────────────
+
+    private String timestampCompleto() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    private String formattaDurata(long ms) {
+        long s = ms / 1000;
+        long h = s / 3600, m = (s % 3600) / 60, sec = s % 60;
+        if (h > 0) return String.format("%dh %02dm %02ds", h, m, sec);
+        if (m > 0) return String.format("%dm %02ds", m, sec);
+        return String.format("%ds", sec);
+    }
 
     private String formattaRiga(String messaggio) {
         if (messaggio.equals("\n")) return "";

@@ -42,6 +42,14 @@ public class MotoreAudio {
     private volatile boolean keepAliveAttivo = false;
     private SourceDataLine lineaKeepAlive = null;
 
+    // ── Ganci per i test automatici ───────────────────────────────────────────
+    // Non usati in produzione. Permettono di verificare il numero di fischi
+    // emessi dalla macchina a stati senza aprire una scheda audio reale.
+    /** Se true, i fischi non vengono realmente riprodotti (nessun hardware audio richiesto). */
+    public static volatile boolean modalitaTest = false;
+    /** Se non null, riceve il numero di fischi richiesti ad ogni chiamata a {@link #eseguiFischi}. */
+    public static volatile java.util.function.IntConsumer osservatoreFischiTest = null;
+
     private MotoreAudio() {
         // FIX #3 – Shutdown hook: garantisce il rilascio delle risorse audio
         // anche in caso di System.exit() o chiusura forzata della JVM.
@@ -140,6 +148,10 @@ public class MotoreAudio {
 
     public void eseguiFischi(int numeroFischi, boolean isSuonoAttivo) {
         if (!isSuonoAttivo) return;
+
+        // Gancio di test: registra i fischi che verrebbero emessi.
+        if (osservatoreFischiTest != null) osservatoreFischiTest.accept(numeroFischi);
+        if (modalitaTest) return; // nei test non riproduciamo davvero l'audio
 
         final int genAttuale = generazioneAudio;
 

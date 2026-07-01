@@ -74,7 +74,8 @@ public class CostruttoreOperatore {
         RiproduttoreInno.fermaInno();
         MotoreAudio.istanza().spegni();
 
-        // 3. Chiude il writer del log in modo ordinato (FIX #3a)
+        // 3. Scrive il riepilogo della gara effettiva e chiude il writer (FIX #3a)
+        app.gestoreLog.scriviRiepilogoChiusura();
         app.gestoreLog.chiudi();
 
         // 4. Ora è sicuro uscire
@@ -308,10 +309,12 @@ public class CostruttoreOperatore {
             app.indicePartenza = 0;
             app.iniziaConPrimaParte = true;
             new ComandoAggiornaTestoTurno(app).esegui();
+            app.gestoreLog.registraGaraOn();
             app.gestoreLog.inizializzaSessione();
         } else {
             app.btnGaraInCorso.setBackground(Color.RED);
             app.btnGaraInCorso.setForeground(Color.WHITE);
+            app.gestoreLog.registraGaraOff();
         }
     }
 

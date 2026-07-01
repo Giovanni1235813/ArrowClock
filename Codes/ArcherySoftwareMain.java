@@ -131,6 +131,19 @@ public class ArcherySoftwareMain {
 
     // ─── Costruttore ─────────────────────────────────────────────────────────
 
+    /**
+     * Costruttore riservato ai test automatici.
+     * NON costruisce la GUI, il motore audio o i file di log: lo stato viene
+     * popolato manualmente dal banco di prova (vedi {@code BancoDiProva}).
+     * Serve a rendere collaudabile la macchina a stati senza dipendere da un
+     * display fisico o da una scheda audio. Il parametro è solo un marcatore
+     * per distinguere questo costruttore da quello di produzione.
+     */
+    ArcherySoftwareMain(boolean modalitaTest) {
+        // Nessuna inizializzazione: i campi usano i valori di default e
+        // vengono impostati dal banco di prova prima di eseguire i comandi.
+    }
+
     public ArcherySoftwareMain() {
         impostaColoriDisabilitatiUI();
         caricaIconaApp();
@@ -148,6 +161,7 @@ public class ArcherySoftwareMain {
         new ComandoApplicaPreset(this, "Manuale").esegui();
         new ComandoReset(this).esegui();
         gestoreLog.inizializzaSessione();
+        gestoreLog.registraAvvioSoftware();
     }
 
     // ─── Avvio ────────────────────────────────────────────────────────────────

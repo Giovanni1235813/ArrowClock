@@ -23,8 +23,11 @@ public class ComandoApplicaPreset implements Comando {
         new ComandoApplicaLayoutMonitor(app).esegui();
         new ComandoAggiornaTestoTurno(app).esegui();
         new ComandoBloccaInterfaccia(app, app.faseAttuale != Fase.ATTESA).esegui();
-        app.operatorFrame.revalidate();
-        app.operatorFrame.repaint();
+        // La finestra è null nei test automatici (nessuna GUI): guardia di sicurezza.
+        if (app.operatorFrame != null) {
+            app.operatorFrame.revalidate();
+            app.operatorFrame.repaint();
+        }
     }
 
     private void configuraPreset() {

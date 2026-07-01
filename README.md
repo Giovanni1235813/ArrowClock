@@ -34,7 +34,7 @@ It supports:
 - **Equipment recovery** phase with booking and +40s increments
 - **National Anthem mode** with automatic flag display and portable `.wav` audio playback
 - **Bilingual UI** (English / Italian, switchable at runtime)
-- **Automatic log file** recording every session event
+- **Automatic log file** recording every session event, bracketed by software open/close times, with an end-of-session **match summary** (statistics counted only while *Match in Progress* is ON)
 
 ---
 
@@ -83,7 +83,7 @@ Archer View
 ## 📁 Log Files & Media (Portable Mode)
 
 ArrowClock is designed to be **100% portable**. It does not require installation.
-When **Match in Progress** is active, ArrowClock automatically records every session event. The log folder is created in the exact same directory as the `.jar` executable:
+On launch it writes a **software-start line** (so the log folder exists from the very first run), and while **Match in Progress** is active it records every session event in detail. When you close the app, it appends a **match summary** — actual match time, parts, ends, emergencies and recoveries — counting **only** the periods when *Match in Progress* was ON. The log folder is created in the exact same directory as the `.jar` executable:
 
 ```text
 📁 Your_ArrowClock_Folder/
@@ -109,6 +109,21 @@ ArrowClock uses the **Command Pattern** as its core design principle. Every user
 - `GestoreLingua` — Static localisation registry (EN / IT)
 
 For the full technical breakdown, see [`ArrowClock_TechnicalDocs.md`](ArrowClock_TechnicalDocs.md).
+
+---
+
+## 🧪 Testing (for developers)
+
+ArrowClock ships with an **automated test suite** that locks in the competition-critical logic — phase transitions and exact whistle counts — so a future change can't silently break a live competition. The tests use a **zero-dependency runner** (plain Java, no JUnit, no build tool), matching the project's portable philosophy. They live in `Tests/` and are **not** part of the distributed `.jar` (built from `Codes/` only).
+
+Run them from the project root:
+
+```bash
+./run_tests.sh      # Linux / macOS
+run_tests.bat       # Windows
+```
+
+The scripts compile to a temporary folder and run everything; they exit `0` if all tests pass. See Section 11 of the technical documentation for details.
 
 ---
 
