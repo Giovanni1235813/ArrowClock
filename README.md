@@ -62,6 +62,27 @@ Archer View
 
 ---
 
+## 🚀 Quick Start (For Non-Programmers)
+
+If you just want to run the software and are not a developer, follow these simple steps:
+
+1. **Download the project**:
+   - Click the green **"<> Code"** button at the top of this GitHub page.
+   - Select **"Download ZIP"**.
+   - Once downloaded, extract the ZIP folder to your Desktop or preferred location.
+
+2. **Run the Application**:
+   - Open the extracted folder and navigate to the `Jar_File` directory.
+   - You will find a file named `ArrowClock.jar`.
+   - **Windows / macOS**: Simply **double-click** the `ArrowClock.jar` file to launch the application. *(If it doesn't open, make sure you have installed Java as mentioned in the Requirements).*
+
+> **P.S. for Linux Users 🐧**: To ensure smooth graphics and avoid visual issues, it is highly recommended to run the application from the terminal with hardware acceleration enabled. Open your terminal in the `Jar_File` folder and type:
+> ```bash
+> java -Dsun.java2d.opengl=true -jar ArrowClock.jar
+> ```
+
+---
+
 ## ⌨️ Key Shortcuts
 
 | Key | Action |
