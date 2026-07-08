@@ -1,0 +1,18 @@
+# IntelliJ IDEA (file di configurazione dell'ambiente di sviluppo)
+.idea/
+*.iml
+
+# Cartelle di output e compilazione (file .class generati automaticamente)
+out/
+
+# Log di gara temporanei
+*Logs/
+*.log
+ArrowClock_Log.txt
+
+# File multimediali dell'utente finale
+Jar_File/ArrowClock_Media/*.wav
+Jar_File/ArrowClock_Media/*.png
+
+# Documenti di lavoro
+*.docx
