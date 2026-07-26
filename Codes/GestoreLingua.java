@@ -127,7 +127,10 @@ public class GestoreLingua {
 
         // ── Voci ComboBox (il modello mantiene la chiave IT; il renderer traduce) ──
         r("combo.Manuale",      "Manuale",      "Manual");
-        r("combo.SCONTRO",      "SCONTRO",      "MATCH");
+        r("combo.SCONTRO ALTERNATO", "SCONTRO ALTERNATO", "ALTERNATING MATCH");
+        r("combo.SCONTRO SIMULTANEO", "SCONTRO SIMULTANEO", "SIMULTANEOUS MATCH");
+        r("combo.SHOOT-OFF ALTERNATO", "SHOOT-OFF ALTERNATO", "ALTERNATING SHOOT-OFF");
+        r("combo.SHOOT-OFF SIMULTANEO", "SHOOT-OFF SIMULTANEO", "SIMULTANEOUS SHOOT-OFF");
         r("combo.- Nessuno -",  "- Nessuno -",  "- None -");
         r("combo.INDIVIDUALE",  "INDIVIDUALE",  "INDIVIDUAL");
         r("combo.SQUADRE",      "SQUADRE",      "TEAMS");
@@ -153,6 +156,9 @@ public class GestoreLingua {
         r("log.volee.start",    "--- INIZIO VOLÉE %d ---", "--- END %d STARTED ---");
         r("log.volee.prova.end", "--- FINE VOLÉE DI PROVA %d ---", "--- TRIAL END %d FINISHED ---");
         r("log.volee.end",      "--- FINE VOLÉE %d ---", "--- END %d FINISHED ---");
+        
+        r("log.fase_speciale.start",   "=== INIZIO %s ===",                    "=== %s START ===");
+        r("log.fase_speciale.end",     "=== FINE %s ===",                      "=== %s END ===");
         r("log.turno.unico",    "Turno Unico: Inizia a tirare il gruppo %s", "Single Turn: Group %s starts shooting");
         r("log.turno.multi",    "Turno %d di %d: Inizia a tirare il gruppo %s", "Turn %d of %d: Group %s starts shooting");
         r("log.scontro.start",  "Scontro: Inizia a tirare %s", "Match: %s starts shooting");

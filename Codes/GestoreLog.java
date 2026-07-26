@@ -195,6 +195,13 @@ public class GestoreLog {
     }
 
     public void logInizioVolee() {
+        String preset = String.valueOf(app.comboPreset.getSelectedItem());
+        if (preset.contains("SCONTRO") || preset.contains("SHOOT-OFF")) {
+            scriviLog("\n");
+            scriviLog(GestoreLingua.tf("log.fase_speciale.start", GestoreLingua.t("combo." + preset)));
+            return;
+        }
+
         int v = (int) app.spinVolee.getValue();
         if (app.isGaraInCorso && app.spinParte != null) {
             maxParteRaggiunta = Math.max(maxParteRaggiunta, (int) app.spinParte.getValue());
@@ -213,6 +220,13 @@ public class GestoreLog {
     }
 
     public void logFineVolee() {
+        String preset = String.valueOf(app.comboPreset.getSelectedItem());
+        if (preset.contains("SCONTRO") || preset.contains("SHOOT-OFF")) {
+            scriviLog(GestoreLingua.tf("log.fase_speciale.end", GestoreLingua.t("combo." + preset)));
+            scriviLog("\n");
+            return;
+        }
+
         int v = (int) app.spinVolee.getValue();
         if (app.isGaraInCorso) {
             if (v == 0) voleeProvaCompletate++;

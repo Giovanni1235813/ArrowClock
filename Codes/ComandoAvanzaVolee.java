@@ -21,12 +21,16 @@ public class ComandoAvanzaVolee implements Comando {
 
         app.gestoreLog.logFineVolee();
 
-        if (voleeAttuale == 0) {
-            gestisciProva(proveTotali);
-        } else if (voleeAttuale >= limiteVolee) {
-            gestisciCambioParte(parteAttuale);
-        } else {
-            app.spinVolee.setValue(voleeAttuale + 1);
+        boolean isStandard = preset.equals("Manuale") || preset.equals("INDOOR") || preset.equals("OUTDOOR");
+
+        if (isStandard) {
+            if (voleeAttuale == 0) {
+                gestisciProva(proveTotali);
+            } else if (voleeAttuale >= limiteVolee) {
+                gestisciCambioParte(parteAttuale);
+            } else {
+                app.spinVolee.setValue(voleeAttuale + 1);
+            }
         }
 
         ruotaTurni();

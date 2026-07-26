@@ -29,7 +29,7 @@ public class ComandoIniziaScontro implements Comando {
         String tipoScontro = String.valueOf(app.comboScontroType.getSelectedItem());
         int frecce = (int) app.spinFrecce.getValue();
         int secPerFreccia = (int) app.spinSecFreccia.getValue();
-        boolean isShootOff = "SHOOT-OFF".equals(String.valueOf(app.comboPreset.getSelectedItem()));
+        boolean isShootOff = String.valueOf(app.comboPreset.getSelectedItem()).contains("SHOOT-OFF");
 
         switch (tipoScontro) {
             case "INDIVIDUALE" -> {

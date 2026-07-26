@@ -55,7 +55,7 @@ public class ComandoApplicaPreset implements Comando {
                 app.spinT2.setValue(240);
                 app.spinT3.setValue(30);
             }
-            case "SCONTRO", "SHOOT-OFF" -> {
+            case "SCONTRO ALTERNATO", "SHOOT-OFF ALTERNATO" -> {
                 mostraPanel("SCONTRO");
                 app.isScontroMode = true;
                 app.nomeSx = "A";
@@ -63,8 +63,26 @@ public class ComandoApplicaPreset implements Comando {
                 app.spinT1.setValue(10);
                 app.comboScontroType.setSelectedItem("INDIVIDUALE");
                 app.spinFrecce.setValue(1);
+                app.spinFrecce.setEnabled(preset.equals("SCONTRO ALTERNATO")); // bloccato a 1 per SHOOT-OFF
                 app.spinSecFreccia.setValue(20);
                 app.comboTurni.setSelectedItem("A - B");
+            }
+            case "SCONTRO SIMULTANEO", "SHOOT-OFF SIMULTANEO" -> {
+                mostraPanel("SCONTRO");
+                app.isScontroMode = false;
+                app.comboTurni.setSelectedItem("- Nessuno -"); // Turno unico senza nome
+                app.spinT1.setValue(10);
+                app.spinT3.setValue(30); // Il tempo giallo di 30 secondi è importante come richiesto
+                app.comboScontroType.setSelectedItem("INDIVIDUALE");
+                if (preset.equals("SHOOT-OFF SIMULTANEO")) {
+                    app.spinFrecce.setValue(1);
+                    app.spinFrecce.setEnabled(false);
+                } else {
+                    app.spinFrecce.setEnabled(true);
+                    app.spinFrecce.setValue(3);
+                }
+                app.spinSecFreccia.setValue(20);
+                // spinT2 verrà aggiornato automaticamente dal listener in CostruttoreOperatore
             }
         }
     }

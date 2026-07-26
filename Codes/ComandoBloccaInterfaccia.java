@@ -28,7 +28,7 @@ public class ComandoBloccaInterfaccia implements Comando {
         app.comboPreset.setEnabled(modoAttivo && !isIdMode && !garaSuON && !isInnoMode);
         app.comboScontroType.setEnabled(modoAttivo && !isIdMode && !garaSuON && !isInnoMode);
 
-        boolean isShootOff = "SHOOT-OFF".equals(String.valueOf(app.comboPreset.getSelectedItem()));
+        boolean isShootOff = String.valueOf(app.comboPreset.getSelectedItem()).contains("SHOOT-OFF");
         app.spinFrecce.setEnabled(modoAttivo && !isShootOff && !isIdMode && !isInnoMode);
         app.spinSecFreccia.setEnabled(modoAttivo && !isIdMode && !isInnoMode);
 

@@ -559,14 +559,14 @@ public class CostruttoreOperatore {
         JPanel presetTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         app.lblModalitaDesc = new JLabel(GestoreLingua.t("lbl.modalita"));
         presetTop.add(app.lblModalitaDesc);
-        app.comboPreset = FabbricaCombo.crea(new String[]{"Manuale","INDOOR","OUTDOOR","SCONTRO","SHOOT-OFF"}, app);
+        app.comboPreset = FabbricaCombo.crea(new String[]{"Manuale","INDOOR","OUTDOOR","SCONTRO ALTERNATO","SCONTRO SIMULTANEO","SHOOT-OFF ALTERNATO","SHOOT-OFF SIMULTANEO"}, app);
         app.comboPreset.addActionListener(e -> new ComandoApplicaPreset(app, String.valueOf(app.comboPreset.getSelectedItem())).esegui());
         presetTop.add(app.comboPreset);
         q.add(presetTop, BorderLayout.NORTH);
         q.add(costruisciOptionsWrapper(), BorderLayout.CENTER);
 
         app.comboScontroType.addActionListener(e -> {
-            if ("SHOOT-OFF".equals(String.valueOf(app.comboPreset.getSelectedItem()))) app.spinFrecce.setValue(1);
+            if (String.valueOf(app.comboPreset.getSelectedItem()).contains("SHOOT-OFF")) app.spinFrecce.setValue(1);
         });
         return q;
     }
@@ -600,6 +600,20 @@ public class CostruttoreOperatore {
         app.scontroOptionsPanel.add(app.spinFrecce);
         app.lblSecFrecciaDesc = new JLabel(GestoreLingua.t("lbl.secfreccia"));
         app.spinSecFreccia = new JSpinner(new SpinnerNumberModel(20, 10, 60, 5));
+        app.comboScontroType.addActionListener(e -> {
+            String preset = String.valueOf(app.comboPreset.getSelectedItem());
+            if ("SCONTRO SIMULTANEO".equals(preset)) {
+                String tipo = String.valueOf(app.comboScontroType.getSelectedItem());
+                if ("INDIVIDUALE".equals(tipo)) app.spinFrecce.setValue(3);
+                else app.spinFrecce.setValue(2);
+            } else if (preset.contains("SHOOT-OFF")) {
+                app.spinFrecce.setValue(1);
+            }
+            aggiornaTotaleDaScontroSimultaneo();
+        });
+        app.spinFrecce.addChangeListener(e -> aggiornaTotaleDaScontroSimultaneo());
+        app.spinSecFreccia.addChangeListener(e -> aggiornaTotaleDaScontroSimultaneo());
+        
         app.scontroOptionsPanel.add(app.lblSecFrecciaDesc);
         app.scontroOptionsPanel.add(app.spinSecFreccia);
         wrapper.add(app.scontroOptionsPanel, "SCONTRO");
@@ -614,6 +628,20 @@ public class CostruttoreOperatore {
         int sec = (int) app.spinSecFrecciaLineare.getValue();
         if ("INDOOR".equals(preset))       app.spinT2.setValue(sec * 3);
         else if ("OUTDOOR".equals(preset)) app.spinT2.setValue(sec * 6);
+    }
+
+    private void aggiornaTotaleDaScontroSimultaneo() {
+        String preset = String.valueOf(app.comboPreset.getSelectedItem());
+        if (!preset.contains("SIMULTANEO")) return;
+        String tipo = String.valueOf(app.comboScontroType.getSelectedItem());
+        int frecce = (int) app.spinFrecce.getValue();
+        int sec = (int) app.spinSecFreccia.getValue();
+        
+        int arcieri = 1;
+        if ("SQUADRE".equals(tipo)) arcieri = 3;
+        else if ("MIX-TEAM".equals(tipo)) arcieri = 2;
+        
+        app.spinT2.setValue(arcieri * frecce * sec);
     }
 
     private JPanel costruisciQuadranteControllo() {

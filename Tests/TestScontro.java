@@ -6,7 +6,7 @@ public class TestScontro {
     /** Scontro INDIVIDUALE (1 freccia → 2 scambi): SX poi DX poi chiusura. */
     public static void individualeDueScambi() {
         BancoDiProva b = new BancoDiProva();
-        b.applicaPreset("SCONTRO"); // INDIVIDUALE, T1=10, 20 s/freccia, 1 freccia
+        b.applicaPreset("SCONTRO ALTERNATO"); // INDIVIDUALE, T1=10, 20 s/freccia, 1 freccia
 
         b.premiStart();
         Verifica.uguale("preparazione scontro", Fase.PREPARAZIONE_ROSSO, b.app.faseAttuale);
@@ -40,7 +40,7 @@ public class TestScontro {
     /** In modalità scontro il tasto RECUPERO è disabilitato (schermo diviso). */
     public static void recuperoIgnoratoInScontro() {
         BancoDiProva b = new BancoDiProva();
-        b.applicaPreset("SCONTRO");
+        b.applicaPreset("SCONTRO ALTERNATO");
         b.premiStart();
         b.tick(10); // tiro sinistra
         Fase prima = b.app.faseAttuale;

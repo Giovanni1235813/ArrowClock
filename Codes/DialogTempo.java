@@ -34,7 +34,9 @@ public class DialogTempo {
         JButton btnPlus  = new JButton("+40s (+)");
         JButton btnMinus = new JButton("-40s (-)");
         JSpinner spinFrecceR = creaSpinner(1,  1, 6, 1);
-        int defaultSec = app.isScontroMode ? (int) app.spinSecFreccia.getValue() : (int) app.spinSecFrecciaLineare.getValue();
+        String preset = String.valueOf(app.comboPreset.getSelectedItem());
+        boolean usaSecScontro = preset.contains("SCONTRO") || preset.contains("SHOOT-OFF");
+        int defaultSec = usaSecScontro ? (int) app.spinSecFreccia.getValue() : (int) app.spinSecFrecciaLineare.getValue();
         JSpinner spinSec     = creaSpinner(defaultSec, 10, 60, 5);
         JButton btnCalc  = new JButton(GestoreLingua.t("dialog.tempo.calcola"));
         JButton btnApply = new JButton(GestoreLingua.t("dialog.tempo.salva"));

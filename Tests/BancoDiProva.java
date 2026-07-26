@@ -42,7 +42,7 @@ public class BancoDiProva {
 
     // ── API di guida dei test ────────────────────────────────────────────────
 
-    /** Applica un preset di gara (Manuale, INDOOR, OUTDOOR, SCONTRO, SHOOT-OFF). */
+    /** Applica un preset di gara (Manuale, INDOOR, OUTDOOR, SCONTRO ALTERNATO, SCONTRO SIMULTANEO, SHOOT-OFF ALTERNATO, SHOOT-OFF SIMULTANEO). */
     public BancoDiProva applicaPreset(String preset) {
         app.comboPreset.setSelectedItem(preset);
         new ComandoApplicaPreset(app, preset).esegui();
@@ -95,7 +95,7 @@ public class BancoDiProva {
         app.spinSecFrecciaRecupero = spinner(40, 10, 60, 5);
 
         // Combo (versioni semplici: nei test non serve la tematizzazione)
-        app.comboPreset = new JComboBox<>(new String[]{"Manuale", "INDOOR", "OUTDOOR", "SCONTRO", "SHOOT-OFF"});
+        app.comboPreset = new JComboBox<>(new String[]{"Manuale", "INDOOR", "OUTDOOR", "SCONTRO ALTERNATO", "SCONTRO SIMULTANEO", "SHOOT-OFF ALTERNATO", "SHOOT-OFF SIMULTANEO"});
         app.comboScontroType = new JComboBox<>(new String[]{"INDIVIDUALE", "SQUADRE", "MIX-TEAM"});
         app.comboTurni = new JComboBox<>(new String[]{
                 "- Nessuno -", "ABC", "ABC - DEF", "AB - CD", "AB - CD - EF",
