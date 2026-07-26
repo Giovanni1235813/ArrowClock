@@ -99,6 +99,7 @@ Each class implements `Comando` and encapsulates exactly one operation.
 | `ComandoFermaTutto` | Multiple commands | Atomic stop: halts timers, resets phase and times, restores colours. Used internally. |
 | `ComandoEmergenza` | ENTER key | Activates or resolves emergency mode (freeze → blink → STOP). |
 | `ComandoRecupero` | R key | Manages recovery phase: immediate 40s, booking, or +40s increment. |
+| `Comando4Fischi` | P key | Books 4 whistles for the end of the current phase (bounced/hanging arrows). |
 | `ComandoChiudiRecupero` | Auto / SPACE during recovery | Ends recovery with 3 whistles, resets to `ATTESA`. |
 | `ComandoInnescaRecupero` | End of end (if recovery booked) | Transitions to `RECUPERO_ATTESA` with 40s initial time. |
 | `ComandoTickTimer` | `MotoreTimer` (every second) | One-second countdown logic, delegates to phase-specific handlers. |
@@ -330,6 +331,7 @@ Shortcuts are registered on the operator panel's `ContentPane` `InputMap` with `
 | ENTER | `ComandoEmergenza` |
 | G | `ComandoReset` |
 | R | `ComandoRecupero` |
+| P | `Comando4Fischi` |
 | F | `MotoreAudio.eseguiFischi(1, ...)` |
 | T | `btnAlternaMetata.doClick()` |
 | M | `btnFormatoTempo.doClick()` |
@@ -453,6 +455,7 @@ Ogni classe implementa `Comando` e incapsula esattamente un'operazione.
 | `ComandoFermaTutto` | Più comandi | Stop atomico: ferma i timer, azzera fase e tempi, ripristina i colori. Uso interno. |
 | `ComandoEmergenza` | Tasto INVIO | Attiva o risolve la modalità emergenza (congela → lampeggia → STOP). |
 | `ComandoRecupero` | Tasto R | Gestisce il recupero: 40s immediati, prenotazione, o incremento +40s. |
+| `Comando4Fischi` | Tasto P | Prenota i 4 fischi per la fine della fase corrente (frecce rimbalzate/penzolanti). |
 | `ComandoChiudiRecupero` | Auto / SPAZIO durante recupero | Termina il recupero con 3 fischi, torna ad `ATTESA`. |
 | `ComandoInnescaRecupero` | Fine volée (se recupero prenotato) | Transisce a `RECUPERO_ATTESA` con 40s iniziali. |
 | `ComandoTickTimer` | `MotoreTimer` (ogni secondo) | Logica conto alla rovescia di un secondo, delega ai gestori specifici per fase. |
@@ -684,6 +687,7 @@ Le scorciatoie sono registrate sull'`InputMap` del `ContentPane` del pannello op
 | INVIO | `ComandoEmergenza` |
 | G | `ComandoReset` |
 | R | `ComandoRecupero` |
+| P | `Comando4Fischi` |
 | F | `MotoreAudio.eseguiFischi(1, ...)` |
 | T | `btnAlternaMetata.doClick()` |
 | M | `btnFormatoTempo.doClick()` |

@@ -28,8 +28,8 @@ The DOS's Controller follows the same philosophy, presenting all the available c
 
 It supports:
 - **Linear shooting** (INDOOR / OUTDOOR / Manual) with turn rotation (AB–CD, A–B–C, etc.)
-- **Head-to-head match** mode (Individual / Teams / Mix-Team) with chess-clock timing
-- **Shoot-off** format
+- **Head-to-head match** mode (Alternating and Simultaneous) for Individual / Teams / Mix-Team with dynamic time calculation
+- **Shoot-off** format (Alternating and Simultaneous)
 - **Emergency freeze** with time adjustment dialog
 - **Equipment recovery** phase with booking and +40s increments
 - **National Anthem mode** with automatic flag display and portable `.wav` audio playback
@@ -91,6 +91,7 @@ If you just want to run the software and are not a developer, follow these simpl
 | `Enter` | Emergency / Resume |
 | `G` | Reset match |
 | `R` | Recovery / +40s / Book |
+| `P` | 4 Whistles (book/cancel) |
 | `F` | Manual whistle |
 | `T` | Rotate starting turn |
 | `M` | Cycle time format (sec / mm:ss / invisible) |
