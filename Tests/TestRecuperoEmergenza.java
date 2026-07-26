@@ -35,15 +35,17 @@ public class TestRecuperoEmergenza {
         b.chiudi();
     }
 
-    /** Recupero IMMEDIATO da attesa (+40s) e chiusura anticipata. */
-    public static void recuperoImmediatoConAggiunta() {
+    /** Recupero IMMEDIATO da attesa e annullamento. */
+    public static void recuperoImmediatoEAnnullamento() {
         BancoDiProva b = new BancoDiProva();
         b.applicaPreset("INDOOR");
-        b.premiRecupero();                    // da ATTESA → recupero immediato 40s
+        b.app.spinFrecceRecupero.setValue(2);
+        b.app.spinSecFrecciaRecupero.setValue(40);
+        b.premiRecupero();                    // da ATTESA → recupero immediato 80s (2*40)
         Verifica.uguale("attesa di recupero", Fase.RECUPERO_ATTESA, b.app.faseAttuale);
-        Verifica.uguale("40s iniziali", 40, b.app.timeRemainingSx);
-        b.premiRecupero();                    // +40s
-        Verifica.uguale("80s dopo aggiunta", 80, b.app.timeRemainingSx);
+        Verifica.uguale("80s iniziali", 80, b.app.timeRemainingSx);
+        b.premiRecupero();                    // annulla
+        Verifica.uguale("fase attesa", Fase.ATTESA, b.app.faseAttuale);
         b.chiudi();
     }
 

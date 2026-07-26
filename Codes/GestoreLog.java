@@ -264,12 +264,15 @@ public class GestoreLog {
         scriviLog(GestoreLingua.tf("log.manual.time", contesto, vecchio, nuovo));
     }
 
+    public void logRecuperoIniziato(int secondi) {
+        if (app.isGaraInCorso) recuperiTotali++;
+        String statoTradotto = GestoreLingua.tf("log.state.iniziato", secondi);
+        scriviLog(GestoreLingua.tf("log.recupero.stato", statoTradotto));
+    }
+
     public void logRecupero(String stato) {
-        // "INIZIATO" segna l'inizio effettivo del tiro di recupero (sia immediato
-        // sia da prenotazione): è il momento giusto per contarne uno.
-        if ("INIZIATO".equals(stato) && app.isGaraInCorso) recuperiTotali++;
         String statoTradotto = traduciStatoRecupero(stato);
-        if (stato.equals("ATTIVATO (40s)") || stato.equals("PRENOTATO")) scriviLog("\n");
+        if (stato.equals("ATTIVATO") || stato.equals("PRENOTATO")) scriviLog("\n");
         scriviLog(GestoreLingua.tf("log.recupero.stato", statoTradotto));
         if (stato.equals("CONCLUSO") || stato.contains("ANNULLATO")) scriviLog("\n");
     }
@@ -384,8 +387,7 @@ public class GestoreLog {
 
     private String traduciStatoRecupero(String stato) {
         return switch (stato) {
-            case "INIZIATO"               -> GestoreLingua.t("log.state.iniziato");
-            case "ATTIVATO (40s)"         -> GestoreLingua.t("log.state.attivato");
+            case "ATTIVATO"               -> GestoreLingua.t("log.state.attivato");
             case "PRENOTATO"              -> GestoreLingua.t("log.state.prenotato");
             case "CONCLUSO"               -> GestoreLingua.t("log.state.concluso");
             case "ANNULLATO"              -> GestoreLingua.t("log.state.annullato");

@@ -79,6 +79,8 @@ public class ComandoAggiornaTesti implements Comando {
         aggiorna(app.lblFrecceDesc,             "lbl.frecce");
         aggiorna(app.lblSecFrecciaDesc,         "lbl.secfreccia");
         aggiorna(app.lblSecFrecciaLineareDesc,  "lbl.secfreccia");
+        aggiorna(app.lblFrecceRecupero,         "lbl.frecce.recupero");
+        aggiorna(app.lblSecFrecciaRecupero,     "lbl.secfreccia.recupero");
     }
 
     // ── 3. TitledBorder ───────────────────────────────────────────────────────
@@ -90,6 +92,7 @@ public class ComandoAggiornaTesti implements Comando {
         aggiorna(app.borderControllo,    "panel.controllo");
         aggiorna(app.borderScontroPanel, "panel.scontro");
         aggiorna(app.borderLinearePanel, "panel.lineare");
+        aggiorna(app.borderRecuperoConfig, "panel.recupero.config");
     }
 
     // ── 4. ComboBox (il renderer legge la lingua al momento del disegno) ─────

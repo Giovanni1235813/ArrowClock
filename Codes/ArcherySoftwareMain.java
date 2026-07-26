@@ -53,6 +53,14 @@ public class ArcherySoftwareMain {
     JPanel scontroOptionsPanel, linearOptionsPanel;
     JSpinner spinFrecce, spinSecFreccia, spinVolee;
 
+    // ─── Nuovi campi Recupero ─────────────────────────────────────────────
+    CardLayout bottomLeftCardLayout;
+    JPanel bottomLeftContainer;
+    JPanel recuperoConfigPanel;
+    JSpinner spinFrecceRecupero, spinSecFrecciaRecupero;
+    JLabel lblFrecceRecupero, lblSecFrecciaRecupero;
+    TitledBorder borderRecuperoConfig;
+
     // ─── Bottoni controllo ───────────────────────────────────────────────────
     JButton btnAlternaMetata;
     JButton btnImpostaNomi;

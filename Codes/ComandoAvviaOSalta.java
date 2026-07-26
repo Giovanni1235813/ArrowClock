@@ -45,7 +45,7 @@ public class ComandoAvviaOSalta implements Comando {
         app.faseAttuale = Fase.RECUPERO_TIRO;
         new ComandoBloccaInterfaccia(app, true).esegui();
         new ComandoImpostaColoriSingoli(app, Color.GREEN).esegui();
-        app.gestoreLog.logRecupero("INIZIATO");
+        app.gestoreLog.logRecuperoIniziato(app.timeRemainingSx);
         app.motoreTimer.avvia();
         new ComandoAggiornaDisplay(app).esegui();
     }

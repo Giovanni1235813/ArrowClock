@@ -28,7 +28,14 @@ public class ComandoInnescaRecupero implements Comando {
         app.colorePreRecupero = Color.RED;
 
         app.faseAttuale = Fase.RECUPERO_ATTESA;
-        app.timeRemainingSx = 40;
+        
+        int frecce = (int) app.spinFrecceRecupero.getValue();
+        int secPerFreccia = (int) app.spinSecFrecciaRecupero.getValue();
+        app.timeRemainingSx = frecce * secPerFreccia;
+
+        if (app.bottomLeftCardLayout != null && app.bottomLeftContainer != null) {
+            app.bottomLeftCardLayout.show(app.bottomLeftContainer, "RECUPERO");
+        }
 
         new ComandoApplicaLayoutMonitor(app).esegui();
         new ComandoImpostaColoriSingoli(app, Color.RED).esegui();

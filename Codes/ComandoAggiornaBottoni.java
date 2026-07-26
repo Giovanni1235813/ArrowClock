@@ -69,8 +69,15 @@ public class ComandoAggiornaBottoni implements Comando {
         app.btnRecupero.setBackground(enabled ? Color.YELLOW : new Color(130, 130, 90));
         app.btnRecupero.setForeground(enabled ? Color.BLACK : new Color(70, 70, 50));
 
-        if (app.faseAttuale == Fase.RECUPERO_ATTESA) {
-            app.btnRecupero.setText(GestoreLingua.t("btn.recupero.add40"));
+        if (app.faseAttuale == Fase.RECUPERO_ATTESA || app.faseAttuale == Fase.RECUPERO_TIRO) {
+            app.btnRecupero.setText(GestoreLingua.t("btn.recupero.annulla"));
+            if (enabled) {
+                app.btnRecupero.setBackground(Color.RED);
+                app.btnRecupero.setForeground(Color.WHITE);
+            } else {
+                app.btnRecupero.setBackground(new Color(120, 60, 60));
+                app.btnRecupero.setForeground(new Color(60, 40, 40));
+            }
         } else if (app.recuperoPrenotato) {
             app.btnRecupero.setText(GestoreLingua.t("btn.recupero.prenotato"));
         } else {

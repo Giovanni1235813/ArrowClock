@@ -55,6 +55,9 @@ public class GestoreLingua {
         r("btn.recupero.add40",
             "<html><center>+40s<br>(R)</center></html>",
             "<html><center>+40s<br>(R)</center></html>");
+        r("btn.recupero.annulla",
+            "<html><center>ANNULLA<br>RECUPERO<br>(R)</center></html>",
+            "<html><center>CANCEL<br>RECOVERY<br>(R)</center></html>");
         r("btn.recupero.prenotato",
             "<html><center>RECUPERO<br>(R)<br><font color='red'>&#9650;</font></center></html>",
             "<html><center>RECOVERY<br>(R)<br><font color='red'>&#9650;</font></center></html>");
@@ -87,6 +90,8 @@ public class GestoreLingua {
         r("lbl.tipo",               "Tipo:",                                "Type:");
         r("lbl.frecce",             "Frecce per Arciere:",                  "Arrows per Archer:");
         r("lbl.secfreccia",         "Secondi a Freccia:",                   "Seconds per Arrow:");
+        r("lbl.frecce.recupero",    "Frecce da recuperare:",                "Arrows to recover:");
+        r("lbl.secfreccia.recupero","Secondi a freccia:",                   "Seconds per arrow:");
 
         // ── Titoli pannelli (TitledBorder) ────────────────────────────────────
         r("panel.tempi",            "Gestione Tempi",                       "Time Management");
@@ -95,6 +100,7 @@ public class GestoreLingua {
         r("panel.controllo",        "Controllo Gara",                       "Match Control");
         r("panel.scontro",          "Impostazioni Scontro / Shoot-Off",     "Match / Shoot-Off Settings");
         r("panel.lineare",          "Impostazioni Freccia",                 "Arrow Settings");
+        r("panel.recupero.config",  "Impostazioni Recupero",                "Recovery Settings");
 
         // ── Testi display ─────────────────────────────────────────────────────
         r("display.recupero",       "RECUPERO",                             "RECOVERY");
@@ -159,8 +165,8 @@ public class GestoreLingua {
         r("log.prefix.parte",           "Parte",                        "Part");
 
         // ── Stati Recupero Materiale ──────────────────────────────────────────
-        r("log.state.iniziato",         "INIZIATO",                     "STARTED");
-        r("log.state.attivato",         "ATTIVATO (40s)",               "ACTIVATED (40s)");
+        r("log.state.iniziato",         "INIZIATO (%ds)",               "STARTED (%ds)");
+        r("log.state.attivato",         "ATTIVATO",                     "ACTIVATED");
         r("log.state.prenotato",        "PRENOTATO",                    "BOOKED");
         r("log.state.concluso",         "CONCLUSO",                     "FINISHED");
         r("log.state.annullato",        "ANNULLATO",                    "CANCELLED");

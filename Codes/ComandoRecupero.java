@@ -26,7 +26,7 @@ public class ComandoRecupero implements Comando {
                 || app.faseAttuale == Fase.IDENTIFICAZIONE_MONITOR) return;
 
         if (app.faseAttuale == Fase.RECUPERO_ATTESA) {
-            aggiungi40s();
+            annullaRecupero();
         } else if (app.faseAttuale == Fase.ATTESA) {
             attivaRecuperoImmediat();
         } else {
@@ -34,20 +34,28 @@ public class ComandoRecupero implements Comando {
         }
     }
 
-    private void aggiungi40s() {
-        app.timeRemainingSx += 40;
+    private void annullaRecupero() {
+        app.recuperoPrenotato = false;
+        new ComandoFermaTutto(app).esegui();
+        new ComandoAggiornaTestoTurno(app).esegui();
         new ComandoAggiornaDisplay(app).esegui();
-        app.gestoreLog.logNotificaParte(
-                "AGGIUNTI 40s AL RECUPERO (Tempo Totale: " + app.timeRemainingSx + "s)");
+        app.gestoreLog.logRecupero("ANNULLATO");
     }
 
     private void attivaRecuperoImmediat() {
         app.faseAttuale = Fase.RECUPERO_ATTESA;
-        app.timeRemainingSx = 40;
+        int frecce = (int) app.spinFrecceRecupero.getValue();
+        int secPerFreccia = (int) app.spinSecFrecciaRecupero.getValue();
+        app.timeRemainingSx = frecce * secPerFreccia;
+        
+        if (app.bottomLeftCardLayout != null && app.bottomLeftContainer != null) {
+            app.bottomLeftCardLayout.show(app.bottomLeftContainer, "RECUPERO");
+        }
+        
         new ComandoBloccaInterfaccia(app, true).esegui();
         new ComandoImpostaColoriSingoli(app, Color.RED).esegui();
         new ComandoAggiornaDisplay(app).esegui();
-        app.gestoreLog.logRecupero("ATTIVATO (40s)");
+        app.gestoreLog.logRecupero("ATTIVATO");
     }
 
     private void togglePrenotazione() {

@@ -32,6 +32,11 @@ public class ComandoFermaTutto implements Comando {
         if (app.add40Container != null) {
             ((CardLayout) app.add40Container.getLayout()).show(app.add40Container, "EMPTY");
         }
+        
+        if (app.bottomLeftCardLayout != null && app.bottomLeftContainer != null) {
+            app.bottomLeftCardLayout.show(app.bottomLeftContainer, "PRESET");
+        }
+        
         new ComandoPulisciLabelEmergenza(app).esegui();
     }
 }

@@ -91,6 +91,8 @@ public class BancoDiProva {
         app.spinVolee = spinner(0, 0, 999, 1);
         app.spinVoleeProva = spinner(2, 1, 4, 1);
         app.spinParte = spinner(1, 1, 9999, 1);
+        app.spinFrecceRecupero = spinner(1, 1, 6, 1);
+        app.spinSecFrecciaRecupero = spinner(40, 10, 60, 5);
 
         // Combo (versioni semplici: nei test non serve la tematizzazione)
         app.comboPreset = new JComboBox<>(new String[]{"Manuale", "INDOOR", "OUTDOOR", "SCONTRO", "SHOOT-OFF"});
@@ -148,6 +150,12 @@ public class BancoDiProva {
         wrapper.add(app.linearOptionsPanel, "LINEARE");
         wrapper.add(app.scontroOptionsPanel, "SCONTRO");
         wrapper.add(new JPanel(), "VUOTO");
+
+        // Bottom Left (CardLayout)
+        app.bottomLeftCardLayout = new CardLayout();
+        app.bottomLeftContainer = new JPanel(app.bottomLeftCardLayout);
+        app.bottomLeftContainer.add(new JPanel(), "PRESET");
+        app.bottomLeftContainer.add(new JPanel(), "RECUPERO");
 
         // Miniatura (CardLayout) usata da ComandoApplicaLayoutMonitor
         app.miniaturaCardLayout = new CardLayout();

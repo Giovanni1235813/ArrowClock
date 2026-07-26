@@ -408,9 +408,46 @@ public class CostruttoreOperatore {
         grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         grid.add(costruisciQuadranteTempi());
         grid.add(costruisciQuadranteDisplay());
-        grid.add(costruisciQuadrantePreset());
+        
+        app.bottomLeftCardLayout = new CardLayout();
+        app.bottomLeftContainer = new JPanel(app.bottomLeftCardLayout);
+        app.bottomLeftContainer.add(costruisciQuadrantePreset(), "PRESET");
+        app.bottomLeftContainer.add(costruisciQuadranteRecupero(), "RECUPERO");
+        grid.add(app.bottomLeftContainer);
+        
         grid.add(costruisciQuadranteControllo());
         return grid;
+    }
+
+    private JPanel costruisciQuadranteRecupero() {
+        JPanel q = new JPanel(new GridLayout(2, 2, 5, 5));
+        app.borderRecuperoConfig = BorderFactory.createTitledBorder(GestoreLingua.t("panel.recupero.config"));
+        q.setBorder(app.borderRecuperoConfig);
+        
+        app.lblFrecceRecupero = new JLabel(GestoreLingua.t("lbl.frecce.recupero"));
+        app.spinFrecceRecupero = new JSpinner(new SpinnerNumberModel(1, 1, 6, 1));
+        
+        app.lblSecFrecciaRecupero = new JLabel(GestoreLingua.t("lbl.secfreccia.recupero"));
+        app.spinSecFrecciaRecupero = new JSpinner(new SpinnerNumberModel(40, 10, 60, 5));
+        
+        app.spinFrecceRecupero.addChangeListener(e -> aggiornaTempoRecupero());
+        app.spinSecFrecciaRecupero.addChangeListener(e -> aggiornaTempoRecupero());
+        
+        q.add(app.lblFrecceRecupero);
+        q.add(app.spinFrecceRecupero);
+        q.add(app.lblSecFrecciaRecupero);
+        q.add(app.spinSecFrecciaRecupero);
+        
+        return q;
+    }
+    
+    private void aggiornaTempoRecupero() {
+        if (app.faseAttuale == Fase.RECUPERO_ATTESA) {
+            int frecce = (int) app.spinFrecceRecupero.getValue();
+            int secPerFreccia = (int) app.spinSecFrecciaRecupero.getValue();
+            app.timeRemainingSx = frecce * secPerFreccia;
+            new ComandoAggiornaDisplay(app).esegui();
+        }
     }
 
     private JPanel costruisciQuadranteTempi() {
@@ -742,7 +779,8 @@ public class CostruttoreOperatore {
 
     private void disabilitaEditSpinner() {
         JSpinner[] spinners = {app.spinT1, app.spinT2, app.spinT3, app.spinSecFrecciaLineare,
-                               app.spinFrecce, app.spinSecFreccia, app.spinVolee};
+                               app.spinFrecce, app.spinSecFreccia, app.spinVolee,
+                               app.spinFrecceRecupero, app.spinSecFrecciaRecupero};
         for (JSpinner s : spinners) personalizzaSpinner(s);
     }
 

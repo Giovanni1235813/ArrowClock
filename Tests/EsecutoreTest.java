@@ -28,7 +28,7 @@ public class EsecutoreTest {
 
         System.out.println("\nRecupero materiale ed emergenza:");
         esegui("Recupero prenotato (5 fischi)",     TestRecuperoEmergenza::recuperoPrenotato);
-        esegui("Recupero immediato +40s",           TestRecuperoEmergenza::recuperoImmediatoConAggiunta);
+        esegui("Recupero immediato e annullamento", TestRecuperoEmergenza::recuperoImmediatoEAnnullamento);
         esegui("Emergenza congela e ripristina",    TestRecuperoEmergenza::emergenzaCongelaERipristina);
 
         System.out.println("\nRiepilogo log di gara:");

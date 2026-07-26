@@ -21,7 +21,7 @@ public class TestLog {
         b.app.spinVolee.setValue(0);
         b.app.gestoreLog.logFineVolee();          // 1 volée di prova
         b.app.gestoreLog.logEmergenza(true);      // 1 emergenza
-        b.app.gestoreLog.logRecupero("INIZIATO"); // 1 recupero
+        b.app.gestoreLog.logRecuperoIniziato(40); // 1 recupero
         b.app.spinParte.setValue(3);
         b.app.gestoreLog.logInizioVolee();        // parte 3 raggiunta
         b.app.gestoreLog.registraGaraOff();
