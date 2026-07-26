@@ -22,6 +22,7 @@ public class ComandoAggiornaBottoni implements Comando {
         aggiornaBottoneRecupero(isIdMode, isInnoMode);
         aggiornaBottoneReset(isIdMode, isInnoMode);
         aggiornaBottoneFischio(isIdMode, isInnoMode);
+        aggiornaBottone4Fischi(isIdMode, isInnoMode);
         aggiornaBottoneFormato(isIdMode, isInnoMode);
     }
 
@@ -103,6 +104,24 @@ public class ComandoAggiornaBottoni implements Comando {
         app.btnFischio.setBackground(enabled ? new Color(135, 206, 250) : new Color(80, 110, 130));
         app.btnFischio.setForeground(enabled ? Color.BLACK : new Color(50, 50, 50));
         app.btnFischio.setText(GestoreLingua.t("btn.fischio"));
+    }
+
+    private void aggiornaBottone4Fischi(boolean isIdMode, boolean isInnoMode) {
+        if (app.btn4Fischi == null) return;
+        boolean enabled = (app.faseAttuale != Fase.EMERGENZA
+                && app.faseAttuale != Fase.RECUPERO_TIRO
+                && !isIdMode
+                && !isInnoMode); // Spento durante l'inno
+
+        app.btn4Fischi.setEnabled(enabled);
+        app.btn4Fischi.setBackground(enabled ? Color.YELLOW : new Color(130, 130, 90));
+        app.btn4Fischi.setForeground(enabled ? Color.BLACK : new Color(70, 70, 50));
+
+        if (app.prenotazione4Fischi) {
+            app.btn4Fischi.setText(GestoreLingua.t("btn.4fischi.prenotato"));
+        } else {
+            app.btn4Fischi.setText(GestoreLingua.t("btn.4fischi"));
+        }
     }
 
     private void aggiornaBottoneFormato(boolean isIdMode, boolean isInnoMode) {

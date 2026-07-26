@@ -61,9 +61,13 @@ public class GestoreLingua {
         r("btn.recupero.prenotato",
             "<html><center>RECUPERO<br>(R)<br><font color='red'>&#9650;</font></center></html>",
             "<html><center>RECOVERY<br>(R)<br><font color='red'>&#9650;</font></center></html>");
-        r("btn.reset",
-            "<html><center>RESET GARA<br>(G)</center></html>",
-            "<html><center>RESET MATCH<br>(G)</center></html>");
+        r("btn.4fischi",
+            "<html><center>4 FISCHI<br>(P)</center></html>",
+            "<html><center>4 WHISTLES<br>(P)</center></html>");
+        r("btn.4fischi.prenotato",
+            "<html><center>4 FISCHI<br>(P)<br><font color='red'>&#9650;</font></center></html>",
+            "<html><center>4 WHISTLES<br>(P)<br><font color='red'>&#9650;</font></center></html>");
+        r("btn.reset",                  "<html><center>RESET<br>GARA<br>(G)</center></html>", "<html><center>RESET<br>MATCH<br>(G)</center></html>");
         r("btn.fischio",
             "<html><center>FISCHIO<br>(F)</center></html>",
             "<html><center>WHISTLE<br>(F)</center></html>");
@@ -172,7 +176,11 @@ public class GestoreLingua {
         r("log.state.annullato",        "ANNULLATO",                    "CANCELLED");
         r("log.state.annullato.reset",  "ANNULLATO (Reset Gara)",       "CANCELLED (Match Reset)");
 
-        // ── Notifiche di Sistema ──────────────────────────────────────────────
+        r("log.4fischi",                "PRENOTAZIONE 4 FISCHI: %s",    "4 WHISTLES BOOKING: %s");
+        r("log.4fischi.on",             "ON",                           "ON");
+        r("log.4fischi.off",            "OFF",                          "OFF");
+
+        // ── Notifiche Speciali (>>> ... <<<) ──────────────────────────────────────────────
         r("log.notifica.fine_prova",    "FINE VOLÉE DI PROVA",          "TRIAL END FINISHED");
         r("log.notifica.fine_parte",    "FINE PARTE %d",                "PART %d FINISHED");
         r("log.notifica.add40",         "AGGIUNTI 40s AL RECUPERO (Tempo Totale: %ds)", "ADDED 40s TO RECOVERY (Total Time: %ds)");

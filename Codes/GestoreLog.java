@@ -284,6 +284,13 @@ public class GestoreLog {
         scriviLog("\n");
     }
 
+    public void logPrenotazione4Fischi(boolean prenotato) {
+        String stato = GestoreLingua.t(prenotato ? "log.4fischi.on" : "log.4fischi.off");
+        scriviLog("\n");
+        scriviLog(">>> " + GestoreLingua.tf("log.4fischi", stato) + " <<<");
+        scriviLog("\n");
+    }
+
     // ── Helpers interni (eseguiti sull'EDT, prima di accodare) ────────────────
 
     private String timestampCompleto() {

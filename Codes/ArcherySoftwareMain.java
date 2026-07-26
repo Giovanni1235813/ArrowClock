@@ -57,7 +57,11 @@ public class ArcherySoftwareMain {
     CardLayout bottomLeftCardLayout;
     JPanel bottomLeftContainer;
     JPanel recuperoConfigPanel;
-    JSpinner spinFrecceRecupero, spinSecFrecciaRecupero;
+    public JSpinner spinFrecceRecupero;
+    public JSpinner spinSecFrecciaRecupero;
+
+    public JButton btn4Fischi;
+    public boolean prenotazione4Fischi = false;
     JLabel lblFrecceRecupero, lblSecFrecciaRecupero;
     TitledBorder borderRecuperoConfig;
 

@@ -138,9 +138,11 @@ public class BancoDiProva {
         app.minEmergenzaTimeDx = new JLabel();
         app.emergenzaLabelsList.add(new JLabel[]{new JLabel(), new JLabel(), new JLabel()});
 
+        app.btn4Fischi = new JButton();
+        
         // Contenitore +40s (CardLayout con EMPTY/BUTTON)
         app.add40Container = new JPanel(new CardLayout());
-        app.add40Container.add(new JPanel(), "EMPTY");
+        app.add40Container.add(app.btn4Fischi, "EMPTY");
         app.add40Container.add(app.btnAdd40s, "BUTTON");
 
         // Wrapper opzioni preset (CardLayout LINEARE/SCONTRO/VUOTO) per ComandoApplicaPreset

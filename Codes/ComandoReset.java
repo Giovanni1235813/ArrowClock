@@ -21,6 +21,7 @@ public class ComandoReset implements Comando {
         MotoreAudio.istanza().azzeraCodaFischi();
         new ComandoFermaTutto(app).esegui();
         app.recuperoPrenotato = false;
+        app.prenotazione4Fischi = false;
         app.btnIdentificaMonitor.setSelected(false);
         new ComandoAggiornaBottoni(app).esegui();
         new ComandoAggiornaTestoTurno(app).esegui();

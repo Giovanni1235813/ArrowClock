@@ -727,10 +727,13 @@ public class CostruttoreOperatore {
         app.btnAdd40s.setText(GestoreLingua.t("btn.reimposta"));
         app.btnAdd40s.addActionListener(e -> new DialogTempo(app).apri());
 
+        app.btn4Fischi = new JButton();
+        app.btn4Fischi.setFocusable(false);
+        app.btn4Fischi.addActionListener(e -> new Comando4Fischi(app).esegui());
+
         app.add40Container = new JPanel(new CardLayout());
         app.add40Container.setOpaque(false);
-        JPanel empty = new JPanel(); empty.setOpaque(false);
-        app.add40Container.add(empty, "EMPTY");
+        app.add40Container.add(app.btn4Fischi, "EMPTY");
         app.add40Container.add(app.btnAdd40s, "BUTTON");
 
         app.btnStartSkip.addActionListener(e -> new ComandoAvviaOSalta(app).esegui());

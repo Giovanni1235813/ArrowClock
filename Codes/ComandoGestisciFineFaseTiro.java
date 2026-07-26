@@ -32,12 +32,15 @@ public class ComandoGestisciFineFaseTiro implements Comando {
 
     private void chiudiVolee() {
         if (app.recuperoPrenotato) {
-            MotoreAudio.istanza().eseguiFischi(5, app.isSuonoAttivo); // rimosso il if (timeout)
+            MotoreAudio.istanza().eseguiFischi(5, app.isSuonoAttivo);
             app.recuperoPrenotato = false;
+            app.prenotazione4Fischi = false; // Reset 4 fischi as well
             new ComandoAvanzaVolee(app).esegui();
             new ComandoInnescaRecupero(app).esegui();
         } else {
-            MotoreAudio.istanza().eseguiFischi(3, app.isSuonoAttivo); // rimosso il if (timeout)
+            int fischi = app.prenotazione4Fischi ? 4 : 3;
+            app.prenotazione4Fischi = false;
+            MotoreAudio.istanza().eseguiFischi(fischi, app.isSuonoAttivo);
             new ComandoConcludiCiclo(app).esegui();
         }
     }
