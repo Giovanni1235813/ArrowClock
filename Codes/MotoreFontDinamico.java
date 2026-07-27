@@ -20,8 +20,8 @@ public class MotoreFontDinamico {
         double heightInches = (double) boundHeight / dpi;
         double containerDiagonal = Math.sqrt((widthInches * widthInches) + (heightInches * heightInches));
 
-        // 1. NUMERI DEL TIMER: Intoccati e massimizzati fino a 25cm per l'omologazione
-        int targetSizePts = (int) Math.round((25.0 / 2.54) * dpi);
+        // 1. NUMERI DEL TIMER: Massimizzati fino a 21cm per evitare troncamenti coi numeri a 3 cifre
+        int targetSizePts = (int) Math.round((21.0 / 2.54) * dpi);
         double scaleFactor = (containerDiagonal < 27.0) ? (containerDiagonal / 27.0) : 1.0;
         int sizeNumeri = (int) Math.round(targetSizePts * scaleFactor);
 
