@@ -54,7 +54,7 @@ Archer View
 | Java | JRE / JDK 17 or later                                                                                                |
 | OS | Windows 10/11 · macOS 10.14+ · Linux (Ubuntu 20.04+)                                                                 |
 | RAM | 2 GB                                                                                                                 |
-| Display | Primary monitor (1024×768 min) + Secondary display(s) 27" Full-HD (Recommended to have around 25cm of number height) |
+| Display | Primary monitor (1024×768 min) + Secondary display(s) 27" Full-HD (Recommended to have around 21cm of number height) |
 | Audio | Any audio output for whistle sounds                                                                                  |
 
 > **Don't have Java?**

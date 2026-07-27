@@ -272,7 +272,7 @@ Each `DisplayArciere` and the operator miniature panel use `CardLayout` with fou
 `MotoreFontDinamico` acts as the centralized typography engine, employing two distinct strategies to strictly prevent layout truncation:
 
 * **Static/Geometric Calculation (`calcolaDimensioni()`):** Computes three base sizes (numbers, STOP word, labels) using the container's physical diagonal and DPI.
-    * **Numbers** target a strict ~25cm physical equivalent on full-size monitors to meet regulations, scaling down proportionally on smaller screens.
+    * **Numbers** target a strict ~21cm physical equivalent on full-size monitors to meet regulations, scaling down proportionally on smaller screens.
     * **STOP** applies an independent horizontal cap (`boundWidth / 5.2`) to prevent the wide word from being truncated horizontally.
     * **Labels** are structurally locked to 1/5 of the number size.
 * **Dynamic/Predictive Calculation (`calcolaFontAdattivoPerTesto()`):** Scans custom text strings (e.g., team names, "RECUPERO") character by character to calculate their exact pixel footprint based on Arial Bold proportions. It dynamically returns the maximum safe font size that perfectly fits the current container without horizontal or vertical clipping.
@@ -628,7 +628,7 @@ Ogni `DisplayArciere` e il pannello miniatura dell'operatore usano `CardLayout` 
 `MotoreFontDinamico` funge da motore tipografico centralizzato, utilizzando due strategie distinte per prevenire tassativamente il troncamento del layout:
 
 * **Calcolo Statico/Geometrico (`calcolaDimensioni()`):** Calcola tre dimensioni di base (numeri, parola STOP, etichette) utilizzando la diagonale fisica e i DPI del contenitore.
-    * I **Numeri** puntano a un equivalente fisico di ~25cm sui monitor da gara per soddisfare i regolamenti, scalandosi in modo proporzionale sugli schermi più piccoli.
+    * I **Numeri** puntano a un equivalente fisico di ~21cm sui monitor da gara per soddisfare i regolamenti, scalandosi in modo proporzionale sugli schermi più piccoli.
     * Lo **STOP** applica un limite orizzontale indipendente (`boundWidth / 5.2`) per impedire che la parola venga troncata lateralmente.
     * Le **Etichette** sono bloccate strutturalmente a 1/5 della dimensione dei numeri.
 * **Calcolo Dinamico/Predittivo (`calcolaFontAdattivoPerTesto()`):** Analizza le stringhe di testo personalizzate (es. nomi delle squadre, "RECUPERO") carattere per carattere, calcolando il loro ingombro esatto in pixel basato sulle proporzioni del font Arial Bold. Restituisce dinamicamente la dimensione massima del font sicura per riempire perfettamente il contenitore senza sforare i margini.
