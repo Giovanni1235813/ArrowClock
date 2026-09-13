@@ -783,7 +783,7 @@ public class CostruttoreOperatore {
         app.lblSecretLeft = new JLabel(" 08025");
         app.lblSecretLeft.setFont(new Font("Arial", Font.PLAIN, 10));
 
-        app.lblDesigned = new JLabel("Designed by Giovanni Zucchi from Arcieri Aquila Bianca in Modena", SwingConstants.CENTER);
+        app.lblDesigned = new JLabel("Designed by Giovanni Zucchi in Modena", SwingConstants.CENTER);
         app.lblDesigned.setFont(new Font("Arial", Font.ITALIC, 11));
 
         app.lblSecretRight = new JLabel("134346 ");
